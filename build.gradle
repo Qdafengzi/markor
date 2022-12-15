@@ -30,7 +30,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:${version_gradle_tools}"
+        classpath "com.android.tools.build:gradle:7.3.1"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         if (project.enable_plugin_kotlin) {
             classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${version_plugin_kotlin}"
