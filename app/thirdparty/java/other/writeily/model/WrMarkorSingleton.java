@@ -1,7 +1,7 @@
 /*#######################################################
  * Copyright (c) 2014 Jeff Martin
  * Copyright (c) 2015 Pedro Lafuente
- * Copyright (c) 2017-2022 Gregor Santner
+ * Copyright (c) 2017-2023 Gregor Santner
  *
  * Licensed under the MIT license.
  * You can get a copy of the license text here:
@@ -19,8 +19,6 @@ import net.gsantner.markor.util.MarkorContextUtils;
 import net.gsantner.opoc.util.GsFileUtils;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

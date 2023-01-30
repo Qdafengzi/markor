@@ -1,9 +1,9 @@
 /*#######################################################
  *
- * SPDX-FileCopyrightText: 2019-2022 Gregor Santner <https://gsantner.net/>
+ * SPDX-FileCopyrightText: 2019-2023 Gregor Santner <https://gsantner.net/>
  * SPDX-License-Identifier: Unlicense OR CC0-1.0
  *
- * Written 2019-2022 by Gregor Santner <https://gsantner.net/>
+ * Written 2019-2023 by Gregor Santner <https://gsantner.net/>
  * To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
  * You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 #########################################################*/
@@ -245,6 +245,12 @@ public class GsTextUtils {
         return null;
     }
 
+    /**
+     * Get a list of values (like np.arange())
+     *
+     * @param ops start, stop and step (all optional)
+     * @return List of integers with values
+     */
     public static List<Integer> range(final int... ops) {
         int start = 0, end = 0, step = 1;
         if (ops != null) {
@@ -267,5 +273,21 @@ public class GsTextUtils {
         }
 
         return values;
+    }
+
+    /**
+     * Count number of instances of 'find' in 'text'
+     *
+     * @param text Text to search
+     * @param find Substring to match
+     * @return count
+     */
+    public static int countSubstrings(final String text, final String find) {
+        int index = 0, count = 0;
+        while ((index = text.indexOf(find, index)) != -1) {
+            index += find.length();
+            count++;
+        }
+        return count;
     }
 }

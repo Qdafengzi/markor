@@ -1,9 +1,9 @@
 /*#######################################################
  *
- * SPDX-FileCopyrightText: 2017-2022 Gregor Santner <https://gsantner.net/>
+ * SPDX-FileCopyrightText: 2017-2023 Gregor Santner <https://gsantner.net/>
  * SPDX-License-Identifier: Unlicense OR CC0-1.0
  *
- * Written 2018-2022 by Gregor Santner <https://gsantner.net/>
+ * Written 2018-2023 by Gregor Santner <https://gsantner.net/>
  * To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
  * You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 #########################################################*/
@@ -129,13 +129,10 @@ public class GsFileBrowserFragment extends GsFragmentBase<GsSharedPreferencesPro
             swipe.setRefreshing(false);
         });
 
-        _filesystemViewerAdapter.restoreSavedInstanceState(savedInstanceState);
-
         if (FileSearchEngine.isSearchExecuting) {
             FileSearchEngine.activity.set(new WeakReference<>(getActivity()));
         }
     }
-
 
     @Override
     public String getFragmentTag() {
@@ -293,6 +290,12 @@ public class GsFileBrowserFragment extends GsFragmentBase<GsSharedPreferencesPro
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState = _filesystemViewerAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onViewStateRestored(final Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        _filesystemViewerAdapter.restoreSavedInstanceState(savedInstanceState);
     }
 
     private static String _previousNotebookDirectory;

@@ -1,9 +1,9 @@
 /*#######################################################
  *
- * SPDX-FileCopyrightText: 2017-2022 Gregor Santner <https://gsantner.net/>
+ * SPDX-FileCopyrightText: 2017-2023 Gregor Santner <https://gsantner.net/>
  * SPDX-License-Identifier: Unlicense OR CC0-1.0
  *
- * Written 2017-2022 by Gregor Santner <https://gsantner.net/>
+ * Written 2017-2023 by Gregor Santner <https://gsantner.net/>
  * To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
  * You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 #########################################################*/
@@ -22,6 +22,7 @@ import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -411,6 +412,7 @@ public class GsSearchOrCustomTextDialog {
             subTitle.setPadding(0, dopt.titleText == 0 ? 0 : paddingBetween, 0, 0);
             subTitle.setText(dopt.messageText);
             subTitle.setTextIsSelectable(true);
+            subTitle.setMovementMethod(LinkMovementMethod.getInstance()); // Allow links to be shown and followed
             titleLayout.addView(subTitle, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         }
 

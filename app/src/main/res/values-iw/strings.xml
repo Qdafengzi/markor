@@ -88,7 +88,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="size">גודל</string>
     <string name="reverse_order">הפוך סדר</string>
     <string name="contribute">עזור לנו</string>
-    <string name="donate">תרום</string>
     <string name="project_page">עמוד הפרויקט</string>
     <string name="press_back_again_to_exit">לחץ \'חזור\' שוב כדי לצאת</string>
     <string name="exit">יציאה</string>
@@ -211,7 +210,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="translate">תרגם</string>
     <string name="more_info_and_help">מידע נוסף ועזרה</string>
     <string name="report_bugs">דווח על באגים</string>
-    <string name="more_info_on_how_to_donate_or_otherwise_support_this_project_text">מידע נוסף על תרומת למפתח, או לתרום לפרוייקט זה.</string>
     <string name="join_community">הצטרף לקהילה</string>
     <string name="bug_reports_suggest_improvements">תן משוב, דווח על שגיאות או הצע שיפורים</string>
     <string name="help_translating_this_app">תרגם ישום זה לשפות אחרות</string>
@@ -273,9 +271,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="my_note">הערה_שלי</string>
     <string name="close">סגירה</string>
     <string name="cancel">ביטול</string>
-    <string name="do_you_like_this_project_want_donate_to_keep_alive">האם את/ה נהנה מפרוייקט זה? האם תרצה לתמוך בשיפור ותיקוני באגים?\n
-\n לכתוב אפליקציות ופוסטים קשורים לוקח המון זמן! אם ברצונך לעזור לפרוייקט להמשיך, נא לשקול תרומה קטנה!\n
-\n פיתוח הפרוייקט הזה נעשה בזמן החופשי, לגמרי בחינם וללא פרסומות!</string>
     <string name="app_start_tab">כרטיסיה שתוצג בפתיחה</string>
     <string name="tab_to_select_at_start">טאב לבחירה כאשר האפליקציה מתחילה</string>
     <string name="swipe_to_change_mode">החלק להחלפת מצב</string>
@@ -438,7 +433,6 @@ FS yyyy MMM dd hh:mm:ss aa
     <string name="match_all">התאם לכל</string>
     <string name="dynamic_notebook_root_links">חיפוש דינמי לשורש המחברת</string>
     <string name="search_dynamically_for_notebook_root">על מנת לעקוב אחר קישורי ויקי, יש לחפש בצורה דינמית בקובץ הnotebook.zim בכדי לזהות את תיקיית השורש עבור אותה מחברת. סמן את זה במידה ואתם משתמשים ביותר ממחברת zim אחת או במידה ותיקיית המחברות המוגדרת באפליקציה אינה תואמת למחברת הzim שלכם.</string>
-    <string name="share_into_format_prefix_for_text_shared">פורמאט/תחילית עבור טקסט ששותף לתוך Markor. עוקב אחר חוקי SimpleDateFormat של אנדרויד.\n\nהשתמשו ב\'%s\' (תחום בגרשיים בודדים) למקם את הטקטס המשותף. אם לא מצוין, הטקסט המשותף מצורף בסוף והפורמאט משמש בתור תחילית בלבד.</string>
     <string name="share_into_format">נוסח עבור שיתוף לתוך</string>
     <string name="auto_format">פירמוט אוטומטי</string>
     <string name="insert_snippet">הוסף את הגזיר</string>

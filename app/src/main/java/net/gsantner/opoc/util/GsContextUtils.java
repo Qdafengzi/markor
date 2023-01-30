@@ -1,9 +1,9 @@
 /*#######################################################
  *
- * SPDX-FileCopyrightText: 2016-2022 Gregor Santner <https://gsantner.net/>
+ * SPDX-FileCopyrightText: 2016-2023 Gregor Santner <https://gsantner.net/>
  * SPDX-License-Identifier: Unlicense OR CC0-1.0
  *
- * Written 2016-2022 by Gregor Santner <https://gsantner.net/>
+ * Written 2016-2023 by Gregor Santner <https://gsantner.net/>
  * To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
  * You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 #########################################################*/
@@ -1368,10 +1368,23 @@ public class GsContextUtils {
         }
 
         if (fileUri != null) {
-            final Intent intent = new Intent(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? Intent.ACTION_INSTALL_PACKAGE : Intent.ACTION_VIEW)
-                    .setFlags(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? Intent.FLAG_GRANT_READ_URI_PERMISSION : Intent.FLAG_ACTIVITY_NEW_TASK)
-                    .setDataAndType(fileUri, "application/vnd.android.package-archive");
-            startActivity(context, intent);
+            final String MIME_TYPE_APK = "application/vnd.android.package-archive";
+
+            boolean hasRequestInstallPackagesPermission = true;
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.getPackageManager().canRequestPackageInstalls();
+                }
+            } catch (Exception ignored) {
+                hasRequestInstallPackagesPermission = false;
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !hasRequestInstallPackagesPermission) {
+                shareStream(context, file, MIME_TYPE_APK);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                startActivity(context, new Intent(Intent.ACTION_INSTALL_PACKAGE).setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION).setDataAndType(fileUri, MIME_TYPE_APK));
+            } else {
+                startActivity(context, new Intent(Intent.ACTION_VIEW).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).setDataAndType(fileUri, MIME_TYPE_APK));
+            }
             return true;
         }
         return false;
@@ -2326,8 +2339,11 @@ public class GsContextUtils {
         }
     }
 
-    public String formatDateTime(@NonNull final Context context, @NonNull final String format, @Nullable final Long datetime, @Nullable final String... def) {
-        final Locale locale = ConfigurationCompat.getLocales(context.getResources().getConfiguration()).get(0);
+    public String formatDateTime(@Nullable final Context context, @NonNull final String format, @Nullable final Long datetime, @Nullable final String... def) {
+        Locale locale = null;
+        if (context != null) {
+            locale = ConfigurationCompat.getLocales(context.getResources().getConfiguration()).get(0);
+        }
         return formatDateTime(locale, format, datetime, def);
     }
 

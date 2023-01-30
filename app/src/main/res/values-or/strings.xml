@@ -78,7 +78,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="size">ଆକାର</string>
     <string name="reverse_order">ଓଲଟା କ୍ରମ</string>
     <string name="contribute">ଯୋଗଦାନ କରନ୍ତୁ</string>
-    <string name="donate">ଦାନ କରନ୍ତୁ</string>
     <string name="press_back_again_to_exit">ପ୍ରସ୍ଥାନ କରିବା ପାଇଁ ପୁଣି \'ବ୍ୟାକ୍\' ଦବାନ୍ତୁ</string>
     <string name="exit">ପ୍ରସ୍ଥାନ</string>
     <string name="undo">ପୂର୍ବବତ୍</string>
@@ -148,7 +147,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="translate">ଅନୁବାଦ କରନ୍ତୁ</string>
     <string name="more_info_and_help">ଅଧିକ ସୂଚନା ଏବଂ ସହାୟତା</string>
     <string name="report_bugs">ବଗ୍‌ ରିପୋର୍ଟ୍‌ କରନ୍ତୁ</string>
-    <string name="more_info_on_how_to_donate_or_otherwise_support_this_project_text">ବିକାଶକାରୀଙ୍କୁ ଦାନ କରିବା, କିମ୍ୱା ଏହି ପ୍ରକଳ୍ପରେ ଯୋଗଦାନ କରିବା ବିଷୟରେ ଅଧିକ ସୂଚନା।</string>
     <string name="join_community">ସମ୍ପ୍ରଦାୟରେ ଯୋଗ ଦିଅନ୍ତୁ</string>
     <string name="bug_reports_suggest_improvements">ମତାମତ ଦିଅନ୍ତୁ, ବଗ୍ ରିପୋର୍ଟ୍ କରନ୍ତୁ କିମ୍ୱା ଉନ୍ନତି ପରାମର୍ଶ ଦିଅନ୍ତୁ</string>
     <string name="help_translating_this_app">ଏହି ଆପକୁ ଅନ୍ୟ ଭାଷାରେ ଅନୁବାଦ କରନ୍ତୁ</string>
@@ -248,7 +246,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="keep_both_all">ଉଭୟ ରଖନ୍ତୁ (ସମସ୍ତ)</string>
     <string name="skip_all">ବାଦ୍ ଦିଅ (ସମସ୍ତ)</string>
     <string name="dynamic_notebook_root_links">ନୋଟବୁକ୍ ମୂଳ ପାଇଁ ଡାଇନାମିକ୍ ସନ୍ଧାନ</string>
-    <string name="share_into_format_prefix_for_text_shared">Markorରେ ଅଂଶୀଦାର ହୋଇଥିବା ପାଠ୍ୟ ପାଇଁ ଫର୍ମାଟ୍/ଉପସର୍ଗ। ଆଣ୍ଡ୍ରଏଡ୍ର ର SimpleDateFormat ନିୟମ ଅନୁସରଣ କରେ।\n\nଅଂଶିଦାରୀ ପାଠ୍ୟ ସ୍ଥାନିତ କରିବାକୁ ପ୍ଲେସହୋଲ୍ଡର୍ \'%s\' (ଉଦ୍ଧୃତି ଚିହ୍ନ ଦ୍ୱାରା ଘେରିକରି) ବ୍ୟବହାର କରନ୍ତୁ। ଯଦି ନିର୍ଦ୍ଦିଷ୍ଟ ହୋଇନାହିଁ, ଅଂଶିଦାରୀ ପାଠ୍ୟ କୁ ଯୋଡ଼ାଯାଏ ଏବଂ ଫର୍ମାଟ୍ ଏକ ଉପସର୍ଗ ଭାବରେ ବ୍ୟବହୃତ ହୁଏ।</string>
     <string name="share_into_format">ଏଥିରେ ଅଂଶୀଦାର - ଫର୍ମାଟ୍</string>
     <string name="auto_format">ସ୍ଵତଃ-ଫର୍ମାଟ୍</string>
     <string name="insert_snippet">ସ୍ନିପେଟ୍ ସନ୍ନିବେଶ କରନ୍ତୁ</string>

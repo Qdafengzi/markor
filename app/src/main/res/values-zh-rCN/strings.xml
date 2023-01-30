@@ -88,7 +88,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="size">按文件大小排序</string>
     <string name="reverse_order">逆向排序</string>
     <string name="contribute">贡献</string>
-    <string name="donate">捐赠</string>
     <string name="project_page">项目主页</string>
     <string name="press_back_again_to_exit">再按一次退出</string>
     <string name="exit">退出</string>
@@ -216,7 +215,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="translate">翻译</string>
     <string name="more_info_and_help">更多信息与帮助</string>
     <string name="report_bugs">报告 bug</string>
-    <string name="more_info_on_how_to_donate_or_otherwise_support_this_project_text">查看有关捐赠给开发人员或为此项目做出贡献的更多信息。</string>
     <string name="join_community">加入社区</string>
     <string name="bug_reports_suggest_improvements">给出反馈，报告问题，或提出改进建议</string>
     <string name="help_translating_this_app">翻译本应用</string>
@@ -278,7 +276,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="my_note">我的笔记</string>
     <string name="close">关闭</string>
     <string name="cancel">取消</string>
-    <string name="do_you_like_this_project_want_donate_to_keep_alive">你喜欢这个项目吗？你想要它得到改善并解决问题吗？\n\n开发应用并撰写相关博客文章需要花费大量时间！如果你想要帮助项目继续进行，请考虑小额捐赠！\n\n这个项目是在闲暇时间开发的，完全免费且没有任何广告！</string>
     <string name="app_start_tab">应用程序启动选项卡</string>
     <string name="tab_to_select_at_start">启动应用时选择的选项卡</string>
     <string name="swipe_to_change_mode">滑动以更改模式</string>
@@ -436,10 +433,12 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="match_all">匹配全部</string>
     <string name="dynamic_notebook_root_links">动态搜索笔记本根目录</string>
     <string name="search_dynamically_for_notebook_root">为了跟随维基链接，动态地搜索notbook.zim文件来识别当前笔记本的根目录。 如果您使用多个zim笔记本或者应用程序中的笔记本目录与您的zim笔记本不对应，请选中此项。</string>
-    <string name="share_into_format_prefix_for_text_shared">共享到 Markor的文本格式/前缀。关注安卓的 SimpleDateFormat 规则。\n\n使用占位符\'%s\' (周围为单引号) 来定位共享文本。 如果未指定，共享文本将附加，并使用格式作为前缀。</string>
+    <string name="share_into_format_prefix_for_text_shared">分享到 Markor 的文本的格式/前缀。遵循 Android 的 SimpleDateFormat 规则。\n\n使用占位符 {{text}} 来放置分享的文本。如果未指定，分享的文本将附加在最后，格式为前缀。</string>
     <string name="share_into_format">分享到 - 格式</string>
     <string name="auto_format">自动格式</string>
     <string name="insert_snippet">插入片段</string>
     <string name="error_could_not_open_file">错误：无法打开文件。</string>
     <string name="document_error_clip">出现错误：文本已复制到剪贴板。</string>
+    <string name="wont_save_min_length">未自动保存字符数不到 %d 的文件以防止数据丢失。</string>
+    <string name="advanced_filtering_help"><![CDATA[<small><a href="https://www.github.com/gsantner/markor/discussions/1940">高级过滤语法</a></small>]]></string>
 </resources>

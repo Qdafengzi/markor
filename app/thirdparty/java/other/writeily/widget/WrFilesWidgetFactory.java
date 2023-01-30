@@ -1,7 +1,7 @@
 /*#######################################################
  * Copyright (c) 2014 Jeff Martin
  * Copyright (c) 2015 Pedro Lafuente
- * Copyright (c) 2017-2022 Gregor Santner
+ * Copyright (c) 2017-2023 Gregor Santner
  *
  * Licensed under the MIT license.
  * You can get a copy of the license text here:
@@ -48,10 +48,7 @@ public class WrFilesWidgetFactory implements RemoteViewsService.RemoteViewsFacto
 
     @Override
     public void onDataSetChanged() {
-        updateFiles();
-    }
 
-    private void updateFiles() {
         _widgetFilesList.clear();
         final File dir = WrWidgetConfigure.getWidgetDirectory(_context, _appWidgetId);
         final AppSettings as = ApplicationObject.settings();
@@ -89,7 +86,8 @@ public class WrFilesWidgetFactory implements RemoteViewsService.RemoteViewsFacto
             final Intent fillInIntent = new Intent().putExtra(Document.EXTRA_PATH, file);
             rowView.setTextViewText(R.id.widget_note_title, file.getName());
             rowView.setOnClickFillInIntent(R.id.widget_note_title, fillInIntent);
-            rowView.setTextViewCompoundDrawables(R.id.widget_note_title, file.isDirectory() ? R.drawable.ic_folder_gray_24dp : R.drawable.ic_file_gray_24dp, 0, 0, 0);
+            final int icon = file.isDirectory() ? R.drawable.ic_folder_gray_24dp : R.drawable.ic_file_gray_24dp;
+            rowView.setTextViewCompoundDrawables(R.id.widget_note_title, icon, 0, 0, 0);
         }
         return rowView;
     }
