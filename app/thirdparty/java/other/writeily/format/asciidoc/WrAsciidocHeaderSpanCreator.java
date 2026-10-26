@@ -1,7 +1,7 @@
 /*#######################################################
  * Copyright (c) 2014 Jeff Martin
  * Copyright (c) 2015 Pedro Lafuente
- * Copyright (c) 2017-2023 Gregor Santner
+ * Copyright (c) 2017-2025 Gregor Santner
  *
  * Licensed under the MIT license.
  * You can get a copy of the license text here:
@@ -23,9 +23,9 @@ public class WrAsciidocHeaderSpanCreator implements GsCallback.r1<Object, Matche
     private final CharSequence _text;
     private final WrProportionalHeaderSpanCreator _spanCreator;
 
-    public WrAsciidocHeaderSpanCreator(final CharSequence text, int color, final float textSize) {
+    public WrAsciidocHeaderSpanCreator(final CharSequence text, int color) {
         _text = text;
-        _spanCreator = new WrProportionalHeaderSpanCreator(textSize, color);
+        _spanCreator = new WrProportionalHeaderSpanCreator(color);
     }
 
     public Object callback(Matcher m) {

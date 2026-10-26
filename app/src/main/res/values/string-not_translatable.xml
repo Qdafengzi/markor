@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-A project by Gregor Santner (https://gsantner.net)
+Maintained 2017-2025 by Gregor Santner <gsantner AT mailbox DOT org>
 
 To the extent possible under law, the person who associated CC0 with
 this file has waived all copyright and related or neighboring rights
@@ -12,11 +12,11 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="app_name_real" translatable="false">Markor</string>
     <string name="app_name" translatable="false">@string/app_name_real</string>
     <string name="app_license_name" translatable="false">Apache 2.0</string>
-    <string name="app_community_url" translatable="false">https://github.com/gsantner/markor/discussions</string>
-    <string name="app_bugreport_url" translatable="false">https://github.com/gsantner/markor/issues/new/choose</string>
-    <string name="app_translate_url" translatable="false">https://crowdin.com/project/markor/invite</string>
+    <string name="app_community_url" translatable="false">https://github.com/gsantner/markor/discussions/2269#discussion_bucket</string>
+    <string name="app_bugreport_url" translatable="false">https://github.com/gsantner/markor/discussions/2269#discussion_bucket</string>
+    <string name="app_translate_url" translatable="false">https://github.com/gsantner/markor/discussions/2269#discussion_bucket</string>
 
-    <string name="app_web_url" translatable="false">https://gsantner.net/project/markor.html?source=inapp</string>
+    <string name="app_web_url" translatable="false">https://github.com/gsantner/markor</string>
     <string name="sync_client_support_issue_url" translatable="false">https://github.com/gsantner/markor/discussions/1381</string>
     <string name="app_source_code_url" translatable="false">https://github.com/gsantner/markor</string>
     <string name="huuid" translatable="false">hUUID</string>
@@ -34,12 +34,14 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="backup" translatable="false">Backup</string>
     <string name="front_matter" translatable="false">Front Matter</string>
     <string name="mime_type" translatable="false">MIME type</string>
+    <string name="sha_256" translatable="false">SHA-256</string>
 
-    <string name="community" translatable="false">Community</string>
     <string name="default_font_family" translatable="false">sans-serif-regular</string>
+    <string name="start" translatable="false">Start</string>
     <string name="quicknote" translatable="false">QuickNote</string>
     <string name="todo" translatable="false">To-Do</string>
     <string name="todo_txt" translatable="false">todo.txt</string>
+    <string name="storage" translatable="false">Storage</string>
     <string name="quicknote_default_filename" translatable="false">QuickNote.md</string>
     <string name="todo_default_filename" translatable="false">todo.txt</string>
     <string name="web_browser" translatable="false">Web browser</string>
@@ -61,10 +63,10 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
 
     <!-- About Screen -->
     <string name="copyright_license_text_official" translatable="false"><![CDATA[
-        ### Copyright © 2017-2023
+        ### Copyright © 2017-2025
         **Gregor Santner**
         \n**Official project sources:**
-        [Website](https://gsantner.net/index.html?source=inapp_license_official_project_source) | [Source code](https://github.com/gsantner/markor) | [F-Droid](https://f-droid.org/repository/browse/?fdid=net.gsantner.markor) | [Google Play](https://play.google.com/store/apps/details?id=net.gsantner.markor)
+        [Project page](https://github.com/gsantner/markor#readme) | [Source code](https://github.com/gsantner/markor) | [F-Droid](https://f-droid.org/repository/browse/?fdid=net.gsantner.markor)
     ]]></string>
 
     <string name="inject_to_head" translatable="false">Inject -> head</string>
@@ -72,20 +74,21 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="js_css" translatable="false"><![CDATA[html: <head>CSS, JavaScript</head>]]></string>
     <string name="inject_to_head_default" translatable="false"><![CDATA[
     <style>
-    \nhtml,body {
-    \n  /*font-family: sans-serif-condensed;*/
-    \n  /*font-size: 80%;*/
+    \nhtml, body {
+    \n/*
+    \nfont-family: sans-serif-condensed;
+    \nfont-size: 80%;
+    \n*/
     \n}
     \n</style>
     \n
-    \n
     \n<script type=\"text/javascript\">
-    \nfunction onPageLoaded(){
-    \n
-    \n/*if (\'{{ post.text_converter_name }}\' == \'MarkdownTextConverter\') {
-    \n  window.scrollTo(0,document.body.scrollHeight);
-    \n}*/
-    \n
+    \nfunction onPageLoaded() {
+    \n/*
+    \nif (\'{{ post.text_converter_name }}\' == \'MarkdownTextConverter\') {
+    \n  window.scrollTo(0, document.body.scrollHeight);
+    \n}
+    \n*/
     \n}
     \n</script>
     ]]></string>
@@ -113,6 +116,7 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
      -->
     <string name="pref_key__markdown__hl_delay_v2" translatable="false">pref_key__markdown__hl_delay_v2</string>
     <string name="pref_key__asciidoc__hl_delay" translatable="false">pref_key__asciidoc__hl_delay</string>
+    <string name="pref_key__orgmode__hl_delay" translatable="false">pref_key__orgmode__hl_delay</string>
     <string name="pref_key__quicknote_filepath" translatable="false">pref_key__quicknote_filepath</string>
     <string name="pref_key__markdown__highlight_lineending_two_or_more_space" translatable="false">pref_key__markdown__highlight_lineending_two_or_more_space</string>
     <string name="pref_key__asciidoc__highlight_lineending_hard_line_break" translatable="false">pref_key__asciidoc__highlight_lineending_hard_line_break</string>
@@ -120,9 +124,11 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="pref_key__markdown__reorder_actions" translatable="false">pref_key__markdown__reorder_actions</string>
     <string name="pref_key__todotxt__reorder_actions" translatable="false">pref_key__todotxt__reorder_actions</string>
     <string name="pref_key__plaintext__reorder_actions" translatable="false">pref_key__plaintext__reorder_actions</string>
+    <string name="pref_key__orgmode__reorder_actions" translatable="false">pref_key__orgmode__reorder_actions</string>
     <string name="pref_key__asciidoc__reorder_actions" translatable="false">pref_key__asciidoc__reorder_actions</string>
     <string name="pref_key__markdown__action_keys" translatable="false">pref_key__markdown__action_keys</string>
     <string name="pref_key__todotxt__action_keys" translatable="false">pref_key__todotxt__action_keys</string>
+    <string name="pref_key__orgmode__action_keys" translatable="false">pref_key__orgmode__action_keys</string>
     <string name="pref_key__plaintext__action_keys" translatable="false">pref_key__plaintext__action_keys</string>
     <string name="pref_key__asciidoc__action_keys" translatable="false">pref_key__asciidoc__action_keys</string>
     <string name="pref_key__todotxt__hl_delay" translatable="false">pref_key__todotxt__hl_delay</string>
@@ -140,6 +146,9 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="pref_key__font_family" translatable="false">pref_key__font_family</string>
     <string name="pref_key__editor_font_size" translatable="false">pref_key__editor_font_size</string>
     <string name="pref_key__app_theme" translatable="false">pref_key__app_theme</string>
+    <string name="pref_key__ui_flat_top_bottom_bars" translatable="false">pref_key__ui_flat_top_bottom_bars</string>
+    <string name="pref_key__main_bottom_bar_show_tab_titles" translatable="false">pref_key__main_bottom_bar_show_tab_titles</string>
+    <string name="pref_key__file_browser_show_dividers" translatable="false">pref_key__file_browser_show_dividers</string>
     <string name="pref_key__theming_hide_system_statusbar" translatable="false">pref_key__theming_hide_system_statusbar</string>
     <string name="pref_key__language" translatable="false">pref_key__language</string>
     <string name="pref_key__is_main_recreate_required" translatable="false">pref_key__is_main_recreate_required</string>
@@ -152,11 +161,11 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="pref_key__editor_start_editing_in_center" translatable="false">pref_key__editor_start_editing_in_center</string>
     <string name="pref_key__share_into__quicknote" translatable="false">pref_key__share_into__quicknote</string>
     <string name="pref_key__share_into__todo" translatable="false">pref_key__share_into__todo</string>
+    <string name="pref_key__share_into__most_recent_document" translatable="false">pref_key__share_into__most_recent_document</string>
     <string name="pref_key__share_into__clipboard" translatable="false">pref_key__share_into__clipboard</string>
-    <string name="pref_key__share_into__existing_document" translatable="false">pref_key__share_into__existing_document</string>
-    <string name="pref_key__share_into__create_document" translatable="false">pref_key__share_into__create_document</string>
     <string name="pref_key__share_into__reshare" translatable="false">pref_key__share_into__reshare</string>
     <string name="pref_key__share_into__calendar_event" translatable="false">pref_key__share_into__calendar_event</string>
+    <string name="pref_key__attach_as_link" translatable="false">pref_key__attach_as_link</string>
     <string name="pref_key__more_info__settings" translatable="false">pref_key__more_info__settings</string>
     <string name="pref_key__more_info__source_code" translatable="false">pref_key__more_info__source_code</string>
     <string name="pref_key__more_info__project_license" translatable="false">pref_key__more_info__project_license</string>
@@ -176,11 +185,13 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="pref_key__editor_disable_spelling_red_underline" translatable="false">pref_key__editor_disable_spelling_red_underline</string>
     <string name="pref_key__highlight_code_monospace_font" translatable="false">pref_key__highlight_code_monospace_font</string>
     <string name="pref_key__highlight_code_block_disabled" translatable="false">pref_key__highlight_code_block_disabled</string>
-    <string name="pref_key__editor_markdown_bigger_headings_2" translatable="false">pref_key__editor_markdown_bigger_headings_2</string>
+    <string name="pref_key__editor_markdown_bigger_headings_3" translatable="false">pref_key__editor_markdown_bigger_headings_3</string>
     <string name="pref_key__editor_unordered_list_character" translatable="false">pref_key__editor_unordered_list_character</string>
     <string name="pref_key__recent_documents" translatable="false">pref_key__recent_documents</string>
     <string name="pref_key__popular_documents" translatable="false">pref_key__popular_documents</string>
     <string name="pref_key__favourite_files" translatable="false">pref_key__favourite_files</string>
+    <string name="pref_key__select_create_document" translatable="false">pref_key__select_create_document</string>
+    <string name="pref_key__search_for_target" translatable="false">pref_key__search_for_target</string>
     <string name="pref_key__share_into__open_in_browser" translatable="false">pref_key__share_into__open_in_browser</string>
     <string name="pref_key__inject_to_head" translatable="false">pref_key__inject_to_head</string>
     <string name="pref_key__inject_to_body" translatable="false">pref_key__inject_to_body</string>
@@ -203,19 +214,20 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="pref_key__basic_color_scheme_sepia" translatable="false">pref_key__basic_color_scheme_sepia</string>
     <string name="pref_key__is_keep_screen_on" translatable="false">pref_key__keep_screen_on</string>
     <string name="pref_key__is_disallow_screenshots" translatable="false">pref_key__is_disallow_screenshots</string>
+    <string name="pref_key__snippet_directory_path" translatable="false">pref_key__snippet_directory_path</string>
 
     <string name="abid_common_delete_lines" translatable="false">abid_common_delete_lines</string>
+    <string name="abid_common_duplicate_lines" translatable="false">abid_common_duplicate_lines</string>
     <string name="abid_common_new_line_below" translatable="false">abid_common_new_line_below</string>
-    <string name="abid_common_attach_something" translatable="false">abid_common_attach_something</string>
     <string name="abid_common_unordered_list_char" translatable="false">abid_common_unordered_list_char</string>
     <string name="abid_common_ordered_list_number" translatable="false">abid_common_ordered_list_number</string>
     <string name="abid_common_ordered_list_renumber" translatable="false">abid_common_ordered_list_renumber</string>
     <string name="abid_common_checkbox_list" translatable="false">abid_common_checkbox_list</string>
     <string name="abid_common_special_key" translatable="false">abid_common_special_key</string>
     <string name="abid_common_open_link_browser" translatable="false">abid_common_open_link_browser</string>
+    <string name="abid_common_change_case" translatable="false">abid_common_change_case</string>
     <string name="abid_common_color_picker" translatable="false">abid_common_color_picker</string>
     <string name="abid_common_time" translatable="false">abid_common_time</string>
-    <string name="abid_common_time_insert_timestamp" translatable="false">abid_common_time_insert_timestamp</string>
     <string name="abid_common_web_jump_to_very_top_or_bottom" translatable="false">abid_common_web_jump_to_very_top_or_bottom</string>
     <string name="abid_common_web_jump_to_table_of_contents" translatable="false">abid_common_web_jump_to_table_of_contents</string>
     <string name="abid_common_view_file_in_other_app" translatable="false">abid_common_view_file_in_other_app</string>
@@ -227,6 +239,9 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="abid_common_move_text_one_line_up" translatable="false">abid_common_move_text_one_line_up</string>
     <string name="abid_common_move_text_one_line_down" translatable="false">abid_common_move_text_one_line_down</string>
     <string name="abid_common_insert_snippet" translatable="false">abid_common_insert_snippet</string>
+    <string name="abid_common_insert_image" translatable="false">abid_common_insert_image</string>
+    <string name="abid_common_insert_audio" translatable="false">abid_common_insert_audio</string>
+    <string name="abid_common_insert_link" translatable="false">abid_common_insert_link</string>
 
     <string name="abid_markdown_quote" translatable="false">abid_markdown_quote</string>
     <string name="abid_markdown_h1" translatable="false">abid_markdown_h1</string>
@@ -237,8 +252,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="abid_markdown_strikeout" translatable="false">abid_markdown_strikeout</string>
     <string name="abid_markdown_code_inline" translatable="false">abid_markdown_code_inline</string>
     <string name="abid_markdown_horizontal_line" translatable="false">abid_markdown_horizontal_line</string>
-    <string name="abid_markdown_insert_image" translatable="false">abid_markdown_insert_image</string>
-    <string name="abid_markdown_insert_link" translatable="false">abid_markdown_insert_link</string>
     <string name="abid_markdown_table_insert_columns" translatable="false">abid_markdown_table_insert_columns</string>
 
     <string name="abid_asciidoc_h1" translatable="false">abid_asciidoc_h1</string>
@@ -282,9 +295,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="abid_asciidoc_block_table" translatable="false">abid_asciidoc_block_table</string>
     <string name="abid_asciidoc_block_pass" translatable="false">abid_asciidoc_block_pass</string>
     <string name="abid_asciidoc_block_quote" translatable="false">abid_asciidoc_block_quote</string>
-
-    <string name="abid_asciidoc_insert_image" translatable="false">abid_asciidoc_insert_image</string>
-    <string name="abid_asciidoc_insert_link" translatable="false">abid_asciidoc_insert_link</string>
     <string name="abid_asciidoc_table_insert_columns" translatable="false">abid_asciidoc_table_insert_columns</string>
 
     <string name="abid_asciidoc_special_key" translatable="false">abid_asciidoc_special_key</string>
@@ -292,38 +302,38 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <!-- used in runAsciidocSpecialKeyAction -->
 
     <!-- https://docs.asciidoctor.org/asciidoc/latest/text/text-span-built-in-roles/ -->
-    <string name="asciidoc_underline"      translatable="false">role - underline</string>
-    <string name="asciidoc_overline"       translatable="false">role - overline</string>
-    <string name="asciidoc_linethrough"    translatable="false">role - linethrough</string>
-    <string name="asciidoc_nobreak"        translatable="false">role - nobreak</string>
-    <string name="asciidoc_nowrap"         translatable="false">role - nowrap</string>
-    <string name="asciidoc_prewrap"        translatable="false">role - prewrap</string>
+    <string name="asciidoc_underline" translatable="false">role - underline</string>
+    <string name="asciidoc_overline" translatable="false">role - overline</string>
+    <string name="asciidoc_linethrough" translatable="false">role - linethrough</string>
+    <string name="asciidoc_nobreak" translatable="false">role - nobreak</string>
+    <string name="asciidoc_nowrap" translatable="false">role - nowrap</string>
+    <string name="asciidoc_prewrap" translatable="false">role - prewrap</string>
 
     <!-- https://docs.asciidoctor.org/asciidoc/latest/text/highlight/ -->
-    <string name="asciidoc_highlight"      translatable="false">inline - highlight</string>
+    <string name="asciidoc_highlight" translatable="false">inline - highlight</string>
 
     <!-- https://docs.asciidoctor.org/asciidoc/latest/text/subscript-and-superscript/ -->
-    <string name="asciidoc_subscript"      translatable="false">inline - subscript</string>
-    <string name="asciidoc_superscript"    translatable="false">inline - superscript</string>
+    <string name="asciidoc_subscript" translatable="false">inline - subscript</string>
+    <string name="asciidoc_superscript" translatable="false">inline - superscript</string>
 
 
     <!-- https://docs.asciidoctor.org/asciidoc/latest/blocks/delimited/ -->
-    <string name="asciidoc_block_comment"     translatable="false">block - comment</string>
-    <string name="asciidoc_block_example"     translatable="false">block - example</string>
-    <string name="asciidoc_block_listing"     translatable="false">block - listing</string>
-    <string name="asciidoc_block_literal"     translatable="false">block - literal</string>
-    <string name="asciidoc_block_open"        translatable="false">block - open</string>
-    <string name="asciidoc_block_sidebar"     translatable="false">block - sidebar</string>
-    <string name="asciidoc_block_table"       translatable="false">block - table</string>
-    <string name="asciidoc_block_pass"        translatable="false">block - pass</string>
-    <string name="asciidoc_block_quote"       translatable="false">block - quote</string>
+    <string name="asciidoc_block_comment" translatable="false">block - comment</string>
+    <string name="asciidoc_block_example" translatable="false">block - example</string>
+    <string name="asciidoc_block_listing" translatable="false">block - listing</string>
+    <string name="asciidoc_block_literal" translatable="false">block - literal</string>
+    <string name="asciidoc_block_open" translatable="false">block - open</string>
+    <string name="asciidoc_block_sidebar" translatable="false">block - sidebar</string>
+    <string name="asciidoc_block_table" translatable="false">block - table</string>
+    <string name="asciidoc_block_pass" translatable="false">block - pass</string>
+    <string name="asciidoc_block_quote" translatable="false">block - quote</string>
 
-    <string name="asciidoc_block_code"        translatable="false">block - code</string>
+    <string name="asciidoc_block_code" translatable="false">block - code</string>
     <string name="asciidoc_block_collapsible" translatable="false">block - collapsible</string>
 
     <!-- https://docs.asciidoctor.org/asciidoc/latest/blocks/breaks/#page-breaks -->
     <string name="asciidoc_break_thematic" translatable="false">break - thematic</string>
-    <string name="asciidoc_break_page"     translatable="false">break - page</string>
+    <string name="asciidoc_break_page" translatable="false">break - page</string>
 
 
     <string name="abid_wikitext_h1" translatable="false">abid_wikitext_h1</string>
@@ -336,20 +346,28 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="abid_wikitext_highlight" translatable="false">abid_wikitext_highlight</string>
     <string name="abid_wikitext_strikeout" translatable="false">abid_wikitext_strikeout</string>
     <string name="abid_wikitext_code_inline" translatable="false">abid_wikitext_code_inline</string>
-    <string name="abid_wikitext_insert_link" translatable="false">abid_wikitext_insert_link</string>
-    <string name="abid_wikitext_insert_image" translatable="false">abid_wikitext_insert_image</string>
 
     <string name="abid_todotxt_toggle_done" translatable="false">abid_todotxt_toggle_done</string>
     <string name="abid_todotxt_add_context" translatable="false">abid_todotxt_add_context</string>
     <string name="abid_todotxt_add_project" translatable="false">abid_todotxt_add_project</string>
     <string name="abid_todotxt_priority" translatable="false">abid_todotxt_priority</string>
     <string name="abid_todotxt_archive_done_tasks" translatable="false">abid_todotxt_archive_done_tasks</string>
-    <string name="abid_todotxt_current_date" translatable="false">abid_todotxt_current_date</string>
+    <string name="abid_todotxt_due_date" translatable="false">abid_todotxt_due_date</string>
     <string name="abid_todotxt_sort_todo" translatable="false">abid_todotxt_sort_todo</string>
 
 
+    <string name="abid_orgmode_h1" translatable="false">abid_orgmode_h1</string>
+    <string name="abid_orgmode_h2" translatable="false">abid_orgmode_h2</string>
+    <string name="abid_orgmode_h3" translatable="false">abid_orgmode_h3</string>
+    <string name="abid_orgmode_bold" translatable="false">abid_orgmode_bold</string>
+    <string name="abid_orgmode_italic" translatable="false">abid_orgmode_italic</string>
+    <string name="abid_orgmode_strikeout" translatable="false">abid_orgmode_strikeout</string>
+    <string name="abid_orgmode_underline" translatable="false">abid_orgmode_underline</string>
+    <string name="abid_orgmode_code_inline" translatable="false">abid_orgmode_code_inline</string>
+
+
     <string name="jekyll_post" translatable="false">Jekyll Post</string>
-    <string name="wikitext" translatable="false">Wikitext</string>
+    <string name="wikitext" translatable="false">Wikitext / Zim</string>
     <string name="pref_key__is_multi_window_enabled" translatable="false">pref_key__is_multi_window_enabled</string>
     <string name="pref_key__is_enable_experimental_features" translatable="false">pref_key__is_enable_experimental_features</string>
     <string name="pref_key__app_start_tab_v2" translatable="false">pref_key__app_start_tab_v2</string>
@@ -359,22 +377,14 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="pref_key__show_dot_files_v2" translatable="false">pref_key__show_dot_files_v2</string>
     <string name="pref_key__tab_width_v2" translatable="false">pref_key__tab_width_v2</string>
     <string name="pref_key__editor_enable_line_breaking" translatable="false">pref_key__editor_enable_line_breaking</string>
+    <string name="pref_key__enable_line_numbers" translatable="false">pref_key__enable_line_numbers</string>
     <string name="pref_key__exts_to_always_open_in_this_app" translatable="false">pref_key__exts_to_always_open_in_this_app</string>
     <string name="pref_key__view_font_size" translatable="false">pref_key__view_font_size</string>
     <string name="pref_key__view_mode_link_color" translatable="false">pref_key__view_mode_link_color</string>
     <string name="pref_key__open_links_with_chrome_custom_tabs" translatable="false">pref_key__open_links_with_chrome_custom_tabs</string>
+    <string name="pref_key__request_external_storage" translatable="false">pref_key__request_external_storage</string>
     <string name="features" translatable="false">Features</string>
     <string name="chrome_custom_tabs" translatable="false">Chrome Custom Tabs</string>
-    <string name="file_template__md_markor_markdown_reference" translatable="false">markor-markdown-reference.md</string>
-    <string name="file_template__md_jekyll_post" translatable="false">2029-01-01-jekyll-post.md</string>
-    <string name="file_template__ad_jekyll_post" translatable="false">2029-01-01-jekyll-post.adoc</string>
-    <string name="file_template__md_zettelkasten" translatable="false">202901012359-zettelkasten.md</string>
-    <string name="file_template__md_cooking_recipe" translatable="false">cooking-recipe.md</string>
-    <string name="file_template__txt_todo_sample" translatable="false">todo.example.txt</string>
-    <string name="file_template__zim_wiki_reference" translatable="false">zim-wiki-reference.txt</string>
-    <string name="file_template__zim_wiki_empty" translatable="false">zim-wiki-empty.txt</string>
-    <string name="file_template__md_hugo_post_front_matter" translatable="false">hugo-post-front-matter.md</string>
-    <string name="file_template__md_presentation_beamer" translatable="false">presentation-beamer.md</string>
     <string name="asciidoc" translatable="false">AsciiDoc</string>
     <string name="key_value" translatable="false">Key - Value</string>
     <string name="ohm" translatable="false">Ohm (Ω)</string>
@@ -399,7 +409,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="pref_key__new_file_dialog_lastused_extension" translatable="false">pref_key__new_file_dialog_lastused_extension</string>
     <string name="pref_key__new_file_dialog_lastused_type" translatable="false">pref_key__new_file_dialog_lastused_type</string>
     <string name="pref_key__file_browser_last_browsed_folder" translatable="false">pref_key__file_browser_last_browsed_folder</string>
-    <string name="select_current_line" translatable="false">Select current line(s)</string>
     <string name="pref_key__file_description_format" translatable="false">pref_key__file_description_format</string>
     <string name="pref_key__wikitext_bigger_headings" translatable="false">pref_key__wikitext_bigger_headings</string>
     <string name="pref_key__asciidoc_bigger_headings" translatable="false">pref_key__asciidoc_bigger_headings</string>
@@ -414,16 +423,28 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="pref_key__is_only_first_content_match" translatable="false">pref_key__is_only_first_content_match</string>
     <string name="pref_key__restore_settings" translatable="false">pref_key__restore_settings</string>
     <string name="pref_key__backup_settings" translatable="false">pref_key__backup_settings</string>
+    <string name="pref_key__editor_tab_to_indent" translatable="false">pref_key__editor_tab_to_indent</string>
+    <string name="pref_key__editor_static_cursor" translatable="false">pref_key__editor_static_cursor</string>
     <string name="hidden_password" translatable="false">****</string>
     <string name="pref_key__todotxt__additional_projects_contexts" translatable="false">"pref_key__todotxt__additional_projects_contexts"</string>
     <string name="pref_key__todotxt__due_date_offset" translatable="false">pref_key__todotxt_due_date_offset</string>
     <string name="action_format_keyvalue" translatable="false">action_format_keyvalue</string>
     <string name="action_format_plaintext" translatable="false">action_format_plaintext</string>
+    <string name="action_format_csv" translatable="false">action_format_csv</string>
     <string name="action_format_asciidoc" translatable="false">action_format_asciidoc</string>
     <string name="action_format_embedbinary" translatable="false">action_format_embedbinary</string>
     <string name="action_format_markdown" translatable="false">action_format_markdown</string>
     <string name="action_format_todotxt" translatable="false">action_format_todotxt</string>
     <string name="action_format_wikitext" translatable="false">action_format_wikitext</string>
+    <string name="action_format_orgmode" translatable="false">action_format_orgmode</string>
     <string name="pref_key__share_into_format" translatable="false">pref_key__share_into_format</string>
+    <string name="pref_key__attachment_folder_name" translatable="false">pref_key__attachment_directory_name</string>
+    <string name="pref_key__filetype_template_map" translatable="false">pref_key__filetype_template_map</string>
+    <string name="pref_key__template_title_format_map" translatable="false">pref_key__template_title_format_map</string>
+    <string name="pref_key__title_format_list" translatable="false">pref_key__title_format_list</string>
+    <string name="pref_key__format_share_as_link" translatable="false">pref_key__format_share_as_link</string>
     <string name="squarebrackets" translatable="false">Square Brackets</string>
+    <string name="csv" translatable="false">CSV</string>
+    <string name="orgmode" translatable="false">OrgMode</string>
+    <string name="option_select_lines" translatable="false">option_select_lines</string>
 </resources>

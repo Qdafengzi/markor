@@ -5,14 +5,20 @@
 * writeily and writeily-pro
 ~° Copyright (c) 2014 Jeff Martin  
 ~° Copyright (c) 2015 Pedro Lafuente   
-~° Markor was initally forked from writeily-pro
-~° but most parts were completly rewritten.
+~° Markor was initially forked from writeily-pro
+~° but most parts were completely rewritten.
 ~° Parts that were not modified / rewitten
 ~° from scratch are placed in the
 ~° thirdparty directory and MIT licensed.
 
 * Mermaid
 ~° Copyright Mermaid authors
+
+* asciidoctor.js
+~° Copyright asciidoctor.js authors
+
+* asciidoctor-skins
+~° Copyright asciidoctor-skins authors
 
 
 `---------------`  
@@ -49,8 +55,11 @@ Version 2.0, January 2004
 * adapter-kit
 ~° Copyright 2013 Mobs & Geeks
 
-* Commons IO
+* commons-io, commons-lang3
 ~° Copyright Apache Foundation
+
+* OpenCsv
+~° Copyright Bytecode Pty Ltd.
 
 * gene-rate
 ~° Copyright 2017 Pixplicity

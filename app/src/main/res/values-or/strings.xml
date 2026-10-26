@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-A project by Gregor Santner (https://gsantner.net)
+Maintained 2017-2025 by Gregor Santner <gsantner AT mailbox DOT org>
 
 To the extent possible under law, the person who associated CC0 with
 this file has waived all copyright and related or neighboring rights
@@ -10,7 +10,7 @@ You should have received a copy of the CC0 legalcode along with this
 work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="settings">ସେଟିଂସମୂହ</string>
+    <string name="settings">ସେଟିଂ</string>
     <string name="light">ହାଲୁକା</string>
     <string name="dark">ଗାଢ଼</string>
     <string name="delete">ବିଲୋପ କରନ୍ତୁ</string>
@@ -27,7 +27,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="create_folder">ଫୋଲ୍ଡର୍ ସୃଷ୍ଟି କରନ୍ତୁ</string>
     <string name="create_new_document">ନୂତନ ଡକ୍ୟୁମେଣ୍ଟ୍ ସୃଷ୍ଟି କରନ୍ତୁ</string>
     <string name="move">ଘୁଞ୍ଚାନ୍ତୁ</string>
-    <string name="copy">କପି କରନ୍ତୁ</string>
     <string name="info">ସୂଚନା</string>
     <string name="file_folder_already_exists_please_use_a_different_name">ଫାଇଲ୍/ଫୋଲ୍ଡର୍ ପୂର୍ବରୁ ବିଦ୍ୟମାନ ଅଛି! ଦୟାକରି ଏକ ଭିନ୍ନ ନାମ ବ୍ୟବହାର କରନ୍ତୁ</string>
     <string name="import_from_device">ଡିଭାଇସରୁ ଆମଦାନୀ କରନ୍ତୁ</string>
@@ -50,6 +49,7 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="image">ପ୍ରତିଛବି</string>
     <string name="font_size">ଫଣ୍ଟ ଆକାର</string>
     <string name="last_modified_witharg">ଶେଷ ସଂଶୋଧିତ: %s</string>
+    <string name="last_modified">ଶେଷ ସଂଶୋଧିତ</string>
     <string name="select_this_folder">ଏହି ଫୋଲ୍ଡର୍ ଚୟନ କରନ୍ତୁ</string>
     <string name="select">ଚୟନ କରନ୍ତୁ</string>
     <string name="create">ସୃଷ୍ଟି କରନ୍ତୁ</string>
@@ -59,7 +59,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="hide_statusbar">ସ୍ଥିତି ଦଣ୍ଡିକା ଲୁଚାଅ</string>
     <string name="name">ନାମ</string>
     <string name="url_or_path">URL / ପଥ</string>
-    <string name="insert_link">ଲିଙ୍କ୍ ସନ୍ନିବେଶ କରନ୍ତୁ</string>
     <string name="insert_image">ପ୍ରତିଛବି ସନ୍ନିବେଶ କରନ୍ତୁ</string>
     <string name="contributors">ଯୋଗଦାନକାରୀ</string>
     <string name="select_storage_folder">ଷ୍ଟୋରେଜ୍ ଫୋଲ୍ଡର୍ ଚୟନ କରନ୍ତୁ</string>
@@ -70,7 +69,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="show_third_party_licenses">ତୃତୀୟ ପକ୍ଷ ଲାଇସେନ୍ସ ଦେଖାନ୍ତୁ |</string>
     <string name="language_change_restart_description">ଏହି ଆପ୍ ର ଭାଷା ବଦଳାନ୍ତୁ। ପରିବର୍ତ୍ତନଗୁଡ଼ିକ କାର୍ଯ୍ୟକାରୀ ହେବା ପାଇଁ ଆପ୍ ପୁନଃଆରମ୍ଭ କରନ୍ତୁ</string>
     <string name="language">ଭାଷା</string>
-    <string name="error_need_storage_permission_to_save_documents">ଡକ୍ୟୁମେଣ୍ଟଗୁଡ଼ିକ ସଞ୍ଚୟ କରିବା ପାଇଁ ଷ୍ଟୋରେଜ୍ ଅନୁମତି ଆବଶ୍ୟକ</string>
     <string name="open_with">ଏହା ସହ ଖୋଲନ୍ତୁ</string>
     <string name="sort_by">ଏହା ଅନୁଯାୟୀ ସଜାନ୍ତୁ</string>
     <string name="date">ତାରିଖ</string>
@@ -103,7 +101,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="tried_to_create_shortcut_for_this_notice">ଆପଣଙ୍କ ହୋମ୍ ସ୍କ୍ରିନରେ ଏକ ସର୍ଟକଟ୍ ସୃଷ୍ଟି କରିବାକୁ ଚେଷ୍ଟା କରିଛି। ଧ୍ୟାନ ଦିଅନ୍ତୁ ଯେ କିଛି ଉନ୍ମୋଚକ ଏହାକୁ ସମର୍ଥନ କରିନପାରେ।</string>
     <string name="files_and_folders">ଫାଇଲ୍ ଓ ଫୋଲ୍ଡର୍</string>
     <string name="document_browser">ଡକ୍ୟୁମେଣ୍ଟ୍ ବ୍ରାଉଜର୍</string>
-    <string name="file_browser">ଫାଇଲ୍ ବ୍ରାଉଜର୍</string>
     <string name="set_due_date">ଧାର୍ଯ୍ୟ ତାରିଖ ସେଟ୍ କରନ୍ତୁ</string>
     <string name="insert_replace_date">ତାରିଖ ସନ୍ନିବେଶ କରନ୍ତୁ</string>
     <string name="create_note" needed="false">ନୋଟ୍ ସୃଷ୍ଟି କରନ୍ତୁ</string>
@@ -125,10 +122,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="break_page_pdf_print">ପୃଷ୍ଠା ଭାଙ୍ଗିବା (PDF/ମୁଦ୍ରଣ)</string>
     <string name="general">ସାଧାରଣ</string>
     <string name="resources">ସମ୍ବଳ</string>
-    <string name="key_pos_1">ଲାଇନ୍ ଆରମ୍ଭ (Pos Home)</string>
-    <string name="key_pos_end">ଲାଇନ୍ ଶେଷ (Pos End)</string>
-    <string name="key_pos_1_document">ଡକ୍ୟୁମେଣ୍ଟ୍ ଆରମ୍ଭ</string>
-    <string name="key_pos_end_document">ଡକ୍ୟୁମେଣ୍ଟ୍ ଶେଷ</string>
     <string name="key_ctrl_a">ସବୁ ଚୟନ କରନ୍ତୁ (Ctrl+A)</string>
     <string name="start_on_bottom">ତଳୁ ଆରମ୍ଭ କରନ୍ତୁ</string>
     <string name="filemanager_doesnot_supply_required_data__appspecific">Markor କେବଳ ସ୍ଥାନୀୟ, ଅଫଲାଇନ୍ ଉପଲବ୍ଧ ଡକ୍ୟୁମେଣ୍ଟଗୁଡ଼ିକୁ ସମ୍ପାଦନ କରିପାରେ ଏବଂ ସମ୍ପୂର୍ଣ୍ଣ ଫାଇଲ୍ ପଥ ପ୍ରଦାନ କରୁନଥିବା ଫାଇଲ୍ ପରିଚାଳକଗୁଡ଼ିକୁ ସମର୍ଥନ କରେ ନାହିଁ।</string>
@@ -154,6 +147,7 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="project_license">ପ୍ରୋଜେକ୍ଟ ଲାଇସେନ୍ସ |</string>
     <string name="contribute_code_to_this_project_anybody_welcome">ପ୍ରୋଜେକ୍ଟରେ କୋଡ୍ ଯୋଗଦାନ କରନ୍ତୁ |. ନବାଗତଙ୍କ ସମେତ ସମସ୍ତେ ଏହା କରିବାକୁ ସ୍ୱାଗତ |</string>
     <string name="project_team">ପ୍ରୋଜେକ୍ଟ ଟିମ୍ |</string>
+    <string name="community">ସମ୍ପ୍ରଦାୟ</string>
     <string name="contributors_public_add_yourself_description">ଯୋଗଦାନକାରୀ ସୂଚନା ଦେଖାନ୍ତୁ |. ଯୋଗଦାନ ପରେ ଏହାକୁ ଏକ ଅପ୍ଟ-ଇନ୍ ଆଧାରରେ ଏଠାରେ ଦେଖାଇବାକୁ ପ୍ରଦାନ କରନ୍ତୁ |</string>
     <string name="descending">ଅବରୋହଣ</string>
     <string name="ascending">ଆରୋହଣ</string>
@@ -195,8 +189,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="black">କଳା</string>
     <string name="white">ଧଳା</string>
     <string name="view">ଦର୍ଶନ</string>
-    <string name="view_mode">ଦର୍ଶନ ମୋଡ୍</string>
-    <string name="edit_mode">ସମ୍ପାଦନ ମୋଡ୍‍</string>
     <string name="favourite">ପ୍ରିୟ</string>
     <string name="please_wait">ଦୟାକରି ଅପେକ୍ଷା କରନ୍ତୁ</string>
     <string name="reload">ପୁନଃଲୋଡ୍ କରନ୍ତୁ</string>
@@ -233,7 +225,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="utf8_with_bom">BOM ଯୁକ୍ତ UTF-8</string>
     <string name="could_not_decrypt_file_content_wrong_password_or_is_the_file_maybe_not_encrypted">ଫାଇଲ୍ ବିଷୟବସ୍ତୁ ଡିକ୍ରିପ୍ଟ କରାଯାଇପାରିଲା ନାହିଁ। ଆପଣ ଏକ ଭୁଲ୍ ପାସ୍‍ୱାର୍ଡ଼ ବ୍ୟବହାର କରିଛନ୍ତି କି? ଫାଇଲ୍ ପ୍ରକୃତରେ Markor ର AES ଏନକ୍ରିପସନ୍ ସହିତ ହି ଏନକ୍ରିପ୍ଟ ହୋଇଛି ତ?</string>
     <string name="password_already_set_setting_a_new_password_will_overwrite">ପାସ୍‍ୱାର୍ଡ଼ ପୂର୍ବରୁ ସେଟ୍ ହୋଇଛି। ଏକ ନୂତନ ପାସ୍‍ୱାର୍ଡ଼ ସେଟ୍ କରିବା ଦ୍ୱାରା ବିଦ୍ୟମାନ ପାସ୍‍ୱାର୍ଡ଼ ନବଲିଖନ ହେବ ଏବଂ ଯଦି ଆପଣ ପାସ୍‍ୱାର୍ଡ଼ ଭୁଲିଯାଆନ୍ତି ତେବେ ଆପଣ ଆଉ ଫାଇଲ୍ ଆକସେସ୍ କରିବାକୁ ସମର୍ଥ ହୋଇନପାରନ୍ତି।</string>
-    <string name="file_settings">ଫାଇଲ୍ ସେଟିଂସ୍</string>
     <string name="backup_settings">ସେଟିଂସ୍ ବ୍ୟାକ୍‌ଅପ୍‌ ନିଅନ୍ତୁ</string>
     <string name="restore_settings">ସେଟିଂସ୍ ପୁନରୁଦ୍ଧାର କରନ୍ତୁ</string>
     <string name="export_settings_to_json_file">json ଫାଇଲକୁ ସେଟିଂସ୍ ରପ୍ତାନି କରନ୍ତୁ</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-A project by Gregor Santner (https://gsantner.net)
+Maintained 2017-2025 by Gregor Santner <gsantner AT mailbox DOT org>
 
 To the extent possible under law, the person who associated CC0 with
 this file has waived all copyright and related or neighboring rights
@@ -27,7 +27,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="create_folder">Crea una nuova cartella</string>
     <string name="create_new_document">Crea un nuovo documento</string>
     <string name="move">Sposta</string>
-    <string name="copy">Copia</string>
     <string name="info">Informazioni</string>
     <string name="file_folder_already_exists_please_use_a_different_name">File/cartella già esistente! Si prega di usare un nome diverso</string>
     <string name="import_from_device">Importa dal dispositivo</string>
@@ -39,6 +38,8 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="share_to_arrow" tools:ignore="TypographyEllipsis">Condividi con…</string>
     <string name="share">Condividi</string>
     <string name="search">Cerca</string>
+    <string name="previous_match">Corrispondenza precedente</string>
+    <string name="next_match">Corrispondenza successiva</string>
     <string name="display_converted_markup">Mostra il markup convertito</string>
     <string name="editor">Modifica</string>
     <string name="folders">Cartelle</string>
@@ -60,6 +61,7 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="last_modified">Ultima modifica</string>
     <string name="select_this_folder">Seleziona questa cartella</string>
     <string name="select">Seleziona</string>
+    <string name="select_all">Seleziona tutto</string>
     <string name="create">Crea</string>
     <string name="select_entries">Seleziona elementi</string>
     <string name="one_item_selected">Un elemento selezionato</string>
@@ -69,9 +71,11 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="name">Nome</string>
     <string name="url_or_path">URL / Percorso</string>
     <string name="insert_link">Inserisci collegamento</string>
+    <string name="format_link">Formatta collegamento</string>
     <string name="insert_image">Inserisci immagine</string>
     <string name="contributors">Collaboratori</string>
     <string name="save_location">Percorso di salvataggio</string>
+    <string name="saved_location_to">Salvato in %s</string>
     <string name="select_storage_folder">Seleziona la cartella di archiviazione</string>
     <string name="licenses">Licenze</string>
     <string name="changelog">Log delle modifiche</string>
@@ -80,7 +84,7 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="show_third_party_licenses">Mostra licenze di terze parti</string>
     <string name="language_change_restart_description">Cambia la lingua di questa app. Riavvia l\'app per rendere effettive le modifiche</string>
     <string name="language">Lingua</string>
-    <string name="error_need_storage_permission_to_save_documents">Sono necessari i permessi di archiviazione per salvare i documenti</string>
+    <string name="storage_permission_required">È necessaria l\'autorizzazione Archiviazione per leggere e scrivere i file</string>
     <string name="open_with">Apri con</string>
     <string name="sort_by">Ordina per</string>
     <string name="date">Ordina per data</string>
@@ -113,6 +117,8 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="add_task">Aggiungi attività</string>
     <string name="add_x_witharg">Aggiungi %s</string>
     <string name="document_to_be_loaded_and_saved_as_witharg">Documento da caricare e salvare come \"%s\"</string>
+    <string name="save_or_not">Salvare le modifiche effettuate?</string>
+    <string name="reload_or_not">Scartare le modifiche e ricaricare?</string>
     <string name="refresh">Ricarica</string>
     <string name="create_shortcut">Crea scorciatoia</string>
     <string name="tried_to_create_shortcut_for_this_notice">La scorciatoia per modificare la nota è stata creata. Qualche lanciatore di applicazioni potrebbe non supportare tale funzione.</string>
@@ -120,7 +126,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="file_not_in_current_folder_do_copy__appspecific">Il file non è situato nella cartella corrente. Vuoi copiarlo nella cartella corrente? Questo sovrascriverà qualsiasi file esistente con lo stesso nome.</string>
     <string name="files_and_folders">File e cartelle</string>
     <string name="document_browser">Navigatore dei documenti</string>
-    <string name="file_browser">Esploratore dei file</string>
     <string name="set_due_date">Imposta data di scadenza</string>
     <string name="insert_replace_date">Insert date</string>
     <string name="create_note" needed="false">Crea nota</string>
@@ -136,12 +141,10 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="main_view">Visualizzazione principale</string>
     <string name="overall_theme_used_in_app">Tema complessivo usato nell\'applicazione</string>
     <string name="remember_last_directory">Ricorda l\'ultima cartella</string>
-    <string name="syntax_highlighting">Evidenziazione della sintassi</string>
-    <string name="dynamic_highlighting">Evidenziazione dinamica</string>
+    <string name="syntax_highlighting">Evidenziazione sintassi</string>
     <string name="highlighting_delay">Ritardo dell\'evidenziazione</string>
     <string name="highlighting_delay_lower_value_more_battery_drain_description__appspecific">Ritardo in millisecondi per l\'aggiornamento dell\'evidenziazione. Un valore basso evidenzierà prima, ma consumerà più batteria e potrà diminuire le prestazioni nei dispositivi più vecchi.</string>
     <string name="highlighting_enabled_or_not__appspecific">Controlla quando il testo deve essere evidenziato o meno</string>
-    <string name="dynamic_highlighting_effect">L\'evidenziazione dinamica migliora le prestazioni. Può dare visualizzazioni imprecise.</string>
     <string name="control_font_size_in_editor">Controlla la dimensione del font usato nell\'editor</string>
     <string name="textactions_show_useful_actions_description__appspecific">Mostra una barra in basso con alcuni pulsanti utili, per modificare il testo o lanciare un\'azione basata sul testo.</string>
     <string name="load_last_opened_folder_at_startup">Apri l\'ultima cartella aperta all\'avvio</string>
@@ -176,17 +179,9 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="sort_tasks_by_selected_order">Ordina i task secondo l\'ordine selezionato</string>
     <string name="special_key">Tasto speciale</string>
     <string name="asciidoc_special_key">Contenuto speciale AsciiDoc</string>
-    <string name="key_page_up">Pagina superiore (tasto Up)</string>
-    <string name="key_page_down">Pagina inferiore (tasto Down)</string>
-    <string name="move_text_one_line_up">Sposta il testo una riga in su</string>
-    <string name="move_text_one_line_down">Sposta il testo una riga in giù</string>
-    <string name="start_new_line_below">Inizia una nuova riga sotto</string>
-    <string name="key_pos_1">Inizio della linea (tasto Home)</string>
-    <string name="key_pos_end">Fine della linea (tasto End)</string>
-    <string name="key_pos_1_document">Inizio del documento</string>
-    <string name="key_pos_end_document">Fine del documento</string>
+    <string name="duplicate_hotkey">Duplica (Ctrl + D)</string>
     <string name="key_ctrl_a">Seleziona tutto (Ctrl + A)</string>
-    <string name="key_tab">Tabulatore</string>
+    <string name="em_space">Spaziatura em (&amp;emsp;)</string>
     <string name="start_on_bottom">Inizia dal basso</string>
     <string name="start_on_bottom_when_loading_document">Dopo che un documento è stato caricato, posiziona il cursore alla fine</string>
     <string name="unordered_list_character">Carattere per liste non ordinate</string>
@@ -195,6 +190,10 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="unordered_list_char_asterisk">Asterisco (*)</string>
     <string name="unordered_list_char_plus">Più (+)</string>
     <string name="filemanager_doesnot_supply_required_data__appspecific">Markor può modificare solamente documenti disponibili in locale oppure offline, e non supporta gestori dei file che non forniscono il percorso completo del file.</string>
+    <string name="file_does_not_exist_and_cant_be_created">Il file o la directory non esistono e non possono essere creati</string>
+    <string name="permissions">Permessi</string>
+    <string name="permission_paths_revert">Tornare ai percorsi di default?</string>
+    <string name="permission_not_granted">Autorizzazione non concessa</string>
     <string name="sync_to_local_folder_notice">Nota: le app di sincronizzazione possono inserire file in cartelle personalizzate. Puoi aprirli modificando la cartella dei documenti di Markor, o usando un altro file manager.</string>
     <string name="vertical_alignment">Allineamento verticale</string>
     <string name="horizontal_alignment">Allineamento orizzontale</string>
@@ -209,12 +208,16 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="center_text">Centra il testo</string>
     <string name="edit_text_in_center_of_screen">Modifica il testo al centro dello schermo</string>
     <string name="clipboard">Appunti</string>
+    <string name="link_copied">Collegamento copiato</string>
     <string name="select_existing_document">Seleziona documento esistente</string>
+    <string name="select_create_document">Seleziona o crea un documento</string>
+    <string name="select_create_folder">Seleziona o crea cartella</string>
     <string name="open_source_licenses">Licenze Open Source</string>
     <string name="rate_this_app">Valuta l\'app</string>
     <string name="translate">Traduci</string>
     <string name="more_info_and_help">Più informazioni e aiuto</string>
     <string name="report_bugs">Segnala un bug</string>
+    <string name="do_you_have_a_question_or_problem">Hai domande o problemi?</string>
     <string name="join_community">Unisciti alla comunità</string>
     <string name="bug_reports_suggest_improvements">Dai un riscontro, segnala bug o suggerisci miglioramenti</string>
     <string name="help_translating_this_app">Traduci l\'applicazoine in altre lingue</string>
@@ -222,6 +225,7 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="project_license">Licenza del progetto</string>
     <string name="contribute_code_to_this_project_anybody_welcome">Contribuisci al codice del progetto. Tutti sono invitati a farlo, anche i nuovi arrivati</string>
     <string name="project_team">Team del progetto</string>
+    <string name="community">Comunità</string>
     <string name="contributors_public_add_yourself_description">Mostra informazioni sui contributori.
 
   I contributori possono fornire informazioni per essere mostrati qui (opt-in) dopo aver contribuito</string>
@@ -252,7 +256,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="no_calendar_app_is_installed">Nessuna app calendario installata!</string>
     <string name="popular_documents">Documenti popolari</string>
     <string name="color">Colore</string>
-    <string name="zero_width_space">Spazio a larghezza zero</string>
     <string name="basic_color_scheme">Schema dei colori di base</string>
     <string name="background_foreground_color_in_editor_works_dark_light">Cambia il colore di sfondo e di primo piano dell\'editor di testo. Si adegua al tema dell\'applicazione, al tema chiaro o scuro. I colori dell\'evidenziazione della sintassi rimangono gli stessi.</string>
     <string name="preset">Predefinito</string>
@@ -270,7 +273,7 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="pick_date">Scegli la data</string>
     <string name="pick_time">Scegli l\'ora</string>
     <string name="get_format_instead_date_or_time">Ottieni il formato invece della data o dell\'ora</string>
-    <string name="always_use_current_date_and_time">Usa sempre la date e ora attuale</string>
+    <string name="use_current_date_and_time">Usa data e ora attuali</string>
     <string name="result">Risultato</string>
     <string name="just_time">Solo l\'ora</string>
     <string name="just_date">Solo la data</string>
@@ -284,6 +287,11 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="swipe_to_change_to_edit_or_view_mode">Scorri per modificare o visualizzare la modalità (opposta alla modalità corrente)</string>
     <string name="folder_first">Prima le cartelle</string>
     <string name="go_to">Vai a</string>
+    <string name="go_to_line">Vai a una riga specifica</string>
+    <string name="select_lines">Seleziona righe</string>
+    <string name="current_line">Riga corrente</string>
+    <string name="select_lines_sample">es. 1:2, 1:, :2, :, 1</string>
+    <string name="line_number">Numero di riga</string>
     <string name="appdata_public">AppData (pubblico)</string>
     <string name="appdata_private">AppData (privato)</string>
     <string name="appdata_sdcard">AppData (scheda SD)</string>
@@ -292,7 +300,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="notebook_is_the_home_of_your_files">Notebook è la cartella che Markor carica nel browser dei file quando l\'app è lanciata. È la cartella home per i tuoi file.</string>
     <string name="quicknote_is_the_fastest_option_to_write_down_notes">QuickNote è l\'opzione più veloce per scrivere note. È un file in formato Markdown nella posizione predefinita &gt;Notebook/QuickNote.md&lt;, è possibile impostare un percorso file personalizzato nelle impostazioni.</string>
     <string name="todo_is_the_easiest_way_">Gestisci le tue attività con ToDo. È un file in formato todo.txt nella posizione predefinita &gt;Notebook/todo.txt&lt;, è possibile impostare un file personalizzato nelle impostazioni.</string>
-    <string name="navigationbar_color">Colore barra di navigazione</string>
     <string name="black">Nero</string>
     <string name="white">Bianco</string>
     <string name="view">Vedi</string>
@@ -310,9 +317,9 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="selected_file_may_be_a_textfile_want_to_open_in_editor">Il file selezionato può essere un file di testo normale. Vuoi aprirlo nell\'editor o in un\'altra app?\n\nNon provare ad aprire file binari. Se non sei sicuro, apri con un\'altra app.</string>
     <string name="list_in_recent_files">Lista nei file recenti</string>
     <string name="reload">Ricarica</string>
-    <string name="wrap_words">Parole a capo</string>
+    <string name="line_numbers">Numeri di riga</string>
     <string name="soft_break_if_not_fit_to_width_else_enable_horizontal_scrolling">Manda a capo il testo se supera la dimensione della riga; altrimenti abilita lo scorrimento orizzontale.</string>
-    <string name="recursive_search_in_current_directory">Ricerca ricorsiva nella directory corrente.</string>
+    <string name="recursive_search_in_location">Ricerca ricorsiva in %s</string>
     <string name="always_open_with_this_app">Apri sempre con quest\'app</string>
     <string name="always_open_files_with_this_app_when_list_contains_file_extension">Apri sempre i file con questa app quando la lista contiene l\'estensione del file. Usa \'Nessuno, .html, .css , .js\' per esempio se si desidera modificare i file web e i file senza estensione.</string>
     <string name="open_file_with">Apri file con</string>
@@ -325,6 +332,7 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="current">Attuale</string>
     <string name="record_audio">Registra audio</string>
     <string name="attach">Allega</string>
+    <string name="attachment">Allegato</string>
     <string name="copy_file">Copia file</string>
     <string name="page">Pagina</string>
     <string name="experimental_features">Funzioni sperimentali</string>
@@ -335,6 +343,7 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="how_much_columns_press_table_button_long_to_start_table">Quante colonne? Premi a lungo il pulsante tabella per creare una tabella (inserisce intestazione), premilo brevemente per aggiungere una riga.</string>
     <string name="example_of_a_markdown_table">Esempio di tabella Markdown</string>
     <string name="delete_lines">Elimina righe</string>
+    <string name="duplicate_lines">Righe duplicate</string>
     <string name="unordered_list">Elenco non ordinato</string>
     <string name="ordered_list">Elenco ordinato</string>
     <string name="check_list">Checklist</string>
@@ -361,8 +370,11 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="add_context">Aggiungi contesto</string>
     <string name="add_project">Aggiungi progetto</string>
     <string name="archive_completed_tasks">Archivia attività completate</string>
+    <string name="superscript">Apice</string>
+    <string name="subscript">Pedice</string>
     <string name="create_new_file_or_folder">Crea un nuovo file o cartella</string>
     <string name="choose_format">Scegli il formato</string>
+    <string name="clear_selection">Cancella selezione</string>
     <string name="selected">Selezionati</string>
     <string name="back">Indietro</string>
     <string name="expand_collapse">Espandi / Comprimi</string>
@@ -373,6 +385,10 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="load_default_settings">Carica impostazioni predefinite</string>
     <string name="drag">Trascina</string>
     <string name="created">Creato</string>
+    <string name="no_results">Nessun risultato</string>
+    <string name="new_line">Nuova riga</string>
+    <string name="use_regular_expression">Usa espressione regolare</string>
+    <string name="find_in_selection">Trova nella selezione</string>
     <string name="file_encryption_password">Password di cifratura file</string>
     <string name="no_password_set_cannot_encrypt_decrypt">Nessuna password impostata, impossibile cifrare o decifrare.\nVai a Impostazioni -&gt; Generale -&gt; Password per impostare una password.</string>
     <string name="encrypt_file_content">Crittografa il contenuto del file</string>
@@ -388,6 +404,7 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="loading_default_value">Caricamento valore predefinito</string>
     <string name="file_settings">Impostazioni file</string>
     <string name="search_and_replace">Cerca / Sostituisci</string>
+    <string name="replace">Sostituisci</string>
     <string name="search_for">Cerca per</string>
     <string name="replace_with">Sostituisci con</string>
     <string name="replace_once">Sostituisci (1)</string>
@@ -437,10 +454,17 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="search_dynamically_for_notebook_root">Per seguire i collegamenti wiki, cerca dinamicamente il file notebook.zim per identificare la directory radice per il notebook corrente. Spunta questa opzione se usi più notebook zim o la directory del notebook impostata nell\'app non corrisponde al tuo notebook zim.</string>
     <string name="share_into_format_prefix_for_text_shared">Formato/Prefisso per il testo condiviso in Markor. Segue le regole SimpleDateFormat di Android.\n\nUsa il segnaposto {{text}} per posizionare il testo condiviso. Se non specificato, il testo condiviso è aggiunto alla fine e il formato usato come prefisso.</string>
     <string name="share_into_format">Condividi in - Formato</string>
+    <string name="attachment_folder_name">Cartella degli allegati</string>
+    <string name="attachment_folder_name_desc">Sottocartella in cui verranno salvati gli allegati. Se lasciato in bianco, gli allegati verranno salvati nella cartella attuale.</string>
     <string name="auto_format">Autoformattazione</string>
     <string name="insert_snippet">Inserisci snippet</string>
+    <string name="snippet_directory">Cartella per snippet / template</string>
     <string name="error_could_not_open_file">Errore: impossibile aprire il file.</string>
     <string name="document_error_clip">Trovato errore: Testo copiato negli appunti.</string>
     <string name="wont_save_min_length">I file di meno di %d caratteri non sono salvati automaticamente, per evitare perdita di dati.</string>
     <string name="advanced_filtering_help"><![CDATA[<small><a href="https://www.github.com/gsantner/markor/discussions/1940">Sintassi filtri avanzata</a></small>]]></string>
+    <string name="filter">Filtro</string>
+    <string name="text_case">maiuscolo/minuscolo</string>
+    <string name="use_tab_to_indent">Indenta le righe col tasto TAB</string>
+    <string name="folder_local">Cartella locale</string>
 </resources>

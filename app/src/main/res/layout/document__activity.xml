@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?><!--
 /*#######################################################
  *
- *   Maintained by Gregor Santner, 2017-
- *   https://gsantner.net/
+ *   Maintained 2017-2025 by Gregor Santner <gsantner AT mailbox DOT org>
  *
- *   License of this file: Apache 2.0 (Commercial upon request)
+ *   License of this file: Apache 2.0
  *     https://www.apache.org/licenses/LICENSE-2.0
  *
 #########################################################*/
@@ -14,6 +13,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical"
     android:theme="@style/AppTheme.Unified"
     tools:context="net.gsantner.markor.activity.DocumentActivity">
@@ -27,20 +27,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/primary"
             android:theme="@style/LightTextToolbarOverlay">
-
-            <TextView
-                android:id="@+id/note__activity__text_note_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:fontFamily="sans-serif-medium"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                tools:ignore="UnusedAttribute" />
 
         </androidx.appcompat.widget.Toolbar>
 

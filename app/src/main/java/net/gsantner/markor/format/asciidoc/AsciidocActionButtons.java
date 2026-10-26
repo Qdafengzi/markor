@@ -1,24 +1,23 @@
 /*#######################################################
  *
- *   Maintained by Gregor Santner, 2018-
- *   https://gsantner.net/
- *
- *   License of this file: Apache 2.0 (Commercial upon request)
+ *   Maintained 2018-2025 by Gregor Santner <gsantner AT mailbox DOT org>
+ *   License of this file: Apache 2.0
  *     https://www.apache.org/licenses/LICENSE-2.0
  *
 #########################################################*/
 package net.gsantner.markor.format.asciidoc;
 
 import android.content.Context;
+import android.view.KeyEvent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
 import net.gsantner.markor.R;
+import net.gsantner.markor.activity.DocumentEditAndViewFragment;
 import net.gsantner.markor.format.ActionButtonBase;
-import net.gsantner.markor.frontend.AttachLinkOrFileDialog;
 import net.gsantner.markor.frontend.MarkorDialogFactory;
-import net.gsantner.markor.frontend.textview.TextViewUtils;
+import net.gsantner.markor.frontend.textview.HighlightingEditor;
 import net.gsantner.markor.model.Document;
 
 import java.util.Arrays;
@@ -32,133 +31,58 @@ public class AsciidocActionButtons extends ActionButtonBase {
     }
 
     @Override
-    public List<ActionItem> getActiveActionList() {
-        final ActionItem[] TMA_ACTIONS = {
-                new ActionItem(R.string.abid_asciidoc_checkbox_list,
-                        R.drawable.ic_check_box_black_24dp, R.string.check_list),
-                new ActionItem(
-                        R.string.abid_asciidoc_unordered_list_char, R.drawable.ic_list_black_24dp,
-                        R.string.unordered_list),
-                new ActionItem(R.string.abid_asciidoc_ordered_list_char,
-                        R.drawable.ic_format_list_numbered_black_24dp, R.string.ordered_list),
-
-                new ActionItem(R.string.abid_asciidoc_indent_level,
-                        R.drawable.ic_baseline_keyboard_double_arrow_right_24,
-                        R.string.indent_level),
-                new ActionItem(R.string.abid_asciidoc_deindent_level,
-                        R.drawable.ic_baseline_keyboard_double_arrow_left_24,
-                        R.string.deindent_level),
-
-                new ActionItem(R.string.abid_common_indent,
-                        R.drawable.ic_format_indent_increase_black_24dp, R.string.indent),
-                new ActionItem(R.string.abid_common_deindent,
-                        R.drawable.ic_format_indent_decrease_black_24dp, R.string.deindent),
-                new ActionItem(R.string.abid_asciidoc_squarebrackets,
-                        R.drawable.ic_baseline_data_array_24, R.string.squarebrackets),
-                new ActionItem(R.string.abid_common_special_key, R.drawable.ic_keyboard_black_24dp,
-                        R.string.special_key),
+    public List<ActionItem> getFormatActionList() {
+        return Arrays.asList(
+                new ActionItem(R.string.abid_asciidoc_checkbox_list, R.drawable.ic_check_box_black_24dp, R.string.check_list),
+                new ActionItem(R.string.abid_asciidoc_unordered_list_char, R.drawable.ic_list_black_24dp, R.string.unordered_list),
+                new ActionItem(R.string.abid_asciidoc_ordered_list_char, R.drawable.ic_format_list_numbered_black_24dp, R.string.ordered_list),
+                new ActionItem(R.string.abid_asciidoc_indent_level, R.drawable.ic_baseline_keyboard_double_arrow_right_24, R.string.indent_level),
+                new ActionItem(R.string.abid_asciidoc_deindent_level, R.drawable.ic_baseline_keyboard_double_arrow_left_24, R.string.deindent_level),
+                new ActionItem(R.string.abid_common_indent, R.drawable.ic_format_indent_increase_black_24dp, R.string.indent),
+                new ActionItem(R.string.abid_common_deindent, R.drawable.ic_format_indent_decrease_black_24dp, R.string.deindent),
+                new ActionItem(R.string.abid_asciidoc_squarebrackets, R.drawable.ic_baseline_data_array_24, R.string.squarebrackets),
                 // similar to abid_common_special_key, but separate menu
-                new ActionItem(R.string.abid_asciidoc_special_key,
-                        R.drawable.asciidoc_icon_black_24dp, R.string.asciidoc_special_key),
-
-                new ActionItem(R.string.abid_common_insert_snippet,
-                        R.drawable.ic_baseline_file_copy_24, R.string.insert_snippet),
-                new ActionItem(R.string.abid_asciidoc_h1, R.drawable.format_header_1,
-                        R.string.heading_1),
-                new ActionItem(R.string.abid_asciidoc_h2, R.drawable.format_header_2,
-                        R.string.heading_2),
-                new ActionItem(R.string.abid_asciidoc_h3, R.drawable.format_header_3,
-                        R.string.heading_3),
-//                new ActionItem(R.string.abid_asciidoc_h4, R.drawable.format_header_4,
-//                        R.string.heading_4),
-//                new ActionItem(R.string.abid_asciidoc_h5, R.drawable.format_header_5,
-//                        R.string.heading_5),
-
-                new ActionItem(R.string.abid_asciidoc_bold, R.drawable.ic_format_bold_black_24dp,
-                        R.string.bold),
-                new ActionItem(R.string.abid_asciidoc_italic,
-                        R.drawable.ic_format_italic_black_24dp, R.string.italic),
-                new ActionItem(
-                        R.string.abid_asciidoc_monospace, R.drawable.ic_code_black_24dp,
-                        R.string.inline_code),
-                new ActionItem(R.string.abid_asciidoc_underline,
-                        R.drawable.ic_format_underlined_black_24dp, R.string.underline),
-                new ActionItem(
-                        R.string.abid_asciidoc_highlight, R.drawable.ic_highlight_black_24dp,
-                        R.string.highlighted),
-                new ActionItem(R.string.abid_asciidoc_linethrough,
-                        R.drawable.ic_format_strikethrough_black_24dp, R.string.strikeout),
-                new ActionItem(
-                        R.string.abid_asciidoc_overline, R.drawable.ic_baseline_format_overline_24,
-                        R.string.inline_code),
-                new ActionItem(R.string.abid_asciidoc_superscript, R.drawable.ic_baseline_superscript_24,
-                        R.string.inline_code),
-                new ActionItem(R.string.abid_asciidoc_subscript,
-                        R.drawable.ic_baseline_subscript_24
-                        , R.string.inline_code),
-                new ActionItem(
-                        R.string.abid_asciidoc_break_thematic, R.drawable.ic_more_horiz_black_24dp,
-                        R.string.horizontal_line),
-                new ActionItem(R.string.abid_asciidoc_block_quote,
-                        R.drawable.ic_format_quote_black_24dp, R.string.quote),
+                new ActionItem(R.string.abid_asciidoc_special_key, R.drawable.asciidoc_icon_black_24dp, R.string.asciidoc_special_key),
+                new ActionItem(R.string.abid_asciidoc_h1, R.drawable.format_header_1, R.string.heading_1),
+                new ActionItem(R.string.abid_asciidoc_h2, R.drawable.format_header_2, R.string.heading_2),
+                new ActionItem(R.string.abid_asciidoc_h3, R.drawable.format_header_3, R.string.heading_3),
+                // new ActionItem(R.string.abid_asciidoc_h4, R.drawable.format_header_4, R.string.heading_4),
+                // new ActionItem(R.string.abid_asciidoc_h5, R.drawable.format_header_5, R.string.heading_5),
+                new ActionItem(R.string.abid_asciidoc_bold, R.drawable.ic_format_bold_black_24dp, R.string.bold),
+                new ActionItem(R.string.abid_asciidoc_italic, R.drawable.ic_format_italic_black_24dp, R.string.italic),
+                new ActionItem(R.string.abid_asciidoc_monospace, R.drawable.ic_code_black_24dp, R.string.inline_code),
+                new ActionItem(R.string.abid_asciidoc_underline, R.drawable.ic_format_underlined_black_24dp, R.string.underline),
+                new ActionItem(R.string.abid_asciidoc_highlight, R.drawable.ic_highlight_black_24dp, R.string.highlighted),
+                new ActionItem(R.string.abid_asciidoc_linethrough, R.drawable.ic_format_strikethrough_black_24dp, R.string.strikeout),
+                new ActionItem(R.string.abid_asciidoc_overline, R.drawable.ic_baseline_format_overline_24, R.string.overline),
+                new ActionItem(R.string.abid_asciidoc_superscript, R.drawable.ic_baseline_superscript_24, R.string.superscript),
+                new ActionItem(R.string.abid_asciidoc_subscript, R.drawable.ic_baseline_subscript_24, R.string.subscript),
+                new ActionItem(R.string.abid_asciidoc_break_thematic, R.drawable.ic_more_horiz_black_24dp, R.string.horizontal_line),
+                new ActionItem(R.string.abid_asciidoc_block_quote, R.drawable.ic_format_quote_black_24dp, R.string.quote),
+                new ActionItem(R.string.abid_common_insert_image, R.drawable.ic_image_black_24dp, R.string.insert_image),
+                new ActionItem(R.string.abid_common_insert_link, R.drawable.ic_link_black_24dp, R.string.insert_link),
+                new ActionItem(R.string.abid_common_insert_audio, R.drawable.ic_keyboard_voice_black_24dp, R.string.audio),
                 // TODO: Implement later
-//                new ActionItem(R.string.abid_common_web_jump_to_table_of_contents,
-//                        R.drawable.ic_list_black_24dp, R.string.table_of_contents,
-//                        ActionItem.DisplayMode.VIEW),
+                // new ActionItem(R.string.abid_common_web_jump_to_table_of_contents, R.drawable.ic_list_black_24dp, R.string.table_of_contents, ActionItem.DisplayMode.VIEW),
                 // TODO: Implement Table Generator later
-                // new ActionItem(R.string.abid_asciidoc_table_insert_columns, R.drawable
-                // .ic_view_module_black_24dp, R.string.table),
-
-                //similar to other formats:
-                new ActionItem(R.string.abid_common_delete_lines, R.drawable.ic_delete_black_24dp,
-                        R.string.delete_lines),
-                new ActionItem(
-                        R.string.abid_common_open_link_browser,
-                        R.drawable.ic_open_in_browser_black_24dp,
-                        R.string.open_link),
+                // new ActionItem(R.string.abid_asciidoc_table_insert_columns, R.drawable.ic_view_module_black_24dp, R.string.table),
+                // similar to other formats:
                 // a different icon was used than in other formats, so that you can distinguish
                 // it from opening in the browser
-                new ActionItem(R.string.abid_common_view_file_in_other_app,
-                        R.drawable.ic_baseline_open_in_new_24, R.string.open_with,
-                        ActionItem.DisplayMode.ANY),
-                new ActionItem(
-                        R.string.abid_common_attach_something, R.drawable.ic_attach_file_black_24dp,
-                        R.string.attach),
-                new ActionItem(R.string.abid_common_time,
-                        R.drawable.ic_access_time_black_24dp, R.string.date_and_time),
-                new ActionItem(
-                        R.string.abid_common_new_line_below,
-                        R.drawable.ic_baseline_keyboard_return_24,
-                        R.string.start_new_line_below),
-                new ActionItem(
-                        R.string.abid_common_move_text_one_line_up,
-                        R.drawable.ic_baseline_arrow_upward_24,
-                        R.string.move_text_one_line_up),
-                new ActionItem(
-                        R.string.abid_common_move_text_one_line_down,
-                        R.drawable.ic_baseline_arrow_downward_24, R.string.move_text_one_line_down),
-                new ActionItem(R.string.abid_common_web_jump_to_very_top_or_bottom,
-                        R.drawable.ic_vertical_align_center_black_24dp, R.string.jump_to_bottom,
-                        ActionItem.DisplayMode.VIEW),
-                new ActionItem(
-                        R.string.abid_common_rotate_screen, R.drawable.ic_rotate_left_black_24dp,
-                        R.string.rotate, ActionItem.DisplayMode.ANY),
-
-        };
-
-        return Arrays.asList(TMA_ACTIONS);
+                new ActionItem(R.string.abid_common_view_file_in_other_app, R.drawable.ic_baseline_open_in_new_24, R.string.open_with).setDisplayMode(ActionItem.DisplayMode.ANY)
+        );
     }
 
-// indent deindent:
+    // indent deindent:
 
-// implemented two different indent deindent
+    // implemented two different indent deindent
 
-// a "normal" one for blank characters only
-// another one that will change the level of headers and lists
-// Pseudologics for the level changer:
-// * indent level: the first character is added as a prefix
-// * deindent level: the first character is removed, but only if something remains after
-// '===' => '== ' => '= ' => '= ' (no further removal)
+    // a "normal" one for blank characters only
+    // another one that will change the level of headers and lists
+    // Pseudologics for the level changer:
+    // * indent level: the first character is added as a prefix
+    // * deindent level: the first character is removed, but only if something remains after
+    // '===' => '== ' => '= ' => '= ' (no further removal)
 
     @Override
     public boolean onActionClick(final @StringRes int action) {
@@ -294,21 +218,20 @@ public class AsciidocActionButtons extends ActionButtonBase {
 
             // https://docs.asciidoctor.org/asciidoc/latest/blocks/breaks/#page-breaks
             case R.string.abid_asciidoc_break_thematic: {
-                runAsciidocInlineAction("'''\n", "", "");
+                runAsciidocInlineAction("", "'''\n", "");
                 return true;
             }
             case R.string.abid_asciidoc_break_page: {
-                runAsciidocInlineAction("<<<\n", "", "");
+                runAsciidocInlineAction("", "<<<\n", "");
                 return true;
             }
 
-            case R.string.abid_asciidoc_insert_link:
-            case R.string.abid_asciidoc_insert_image: {
-                AttachLinkOrFileDialog.showInsertImageOrLinkDialog(
-                        action == R.string.abid_asciidoc_insert_image ? 2 : 3,
-                        _document.getFormat(), getActivity(), _hlEditor, _document.getFile());
+            // https://docs.asciidoctor.org/asciidoc/latest/blocks/blockquotes/
+            case R.string.abid_asciidoc_block_quote: {
+                runAsciidocInlineAction("\n____\n", "", "");
                 return true;
             }
+
             //this is an additional extra menu, analogous to special_key menu
             case R.string.abid_asciidoc_special_key: {
                 runAsciidocSpecialKeyAction();
@@ -328,11 +251,6 @@ public class AsciidocActionButtons extends ActionButtonBase {
     // idea based on runSpecialKeyAction()
     private void runAsciidocSpecialKeyAction() {
 
-        // Needed to prevent selection from being overwritten on refocus
-        final int[] sel = TextViewUtils.getSelection(_hlEditor);
-        _hlEditor.clearFocus();
-        _hlEditor.requestFocus();
-        _hlEditor.setSelection(sel[0], sel[1]);
         // showAsciidocSpecialKeyDialog is used instead of showSpecialKeyDialog
         MarkorDialogFactory.showAsciidocSpecialKeyDialog(getActivity(), (callbackPayload) -> {
             if (!_hlEditor.hasSelection() && _hlEditor.length() > 0) {
@@ -486,9 +404,17 @@ public class AsciidocActionButtons extends ActionButtonBase {
         return R.string.pref_key__asciidoc__action_keys;
     }
 
-    // @Override
-    // protected void renumberOrderedList() {
-    //     AutoTextFormatter.renumberOrderedList(_hlEditor.getText(),
-    //     AsciidocReplacePatternGenerator.formatPatterns);
-    // }
+    @Override
+    public boolean onKeyPress(Object source, int keyCode, KeyEvent event, DocumentEditAndViewFragment fragment) {
+        if (source instanceof HighlightingEditor) {
+            if (event.isCtrlPressed()) {
+                if (keyCode == KeyEvent.KEYCODE_I) {
+                    onActionClick(R.string.abid_asciidoc_italic);
+                    return true;
+                }
+            }
+        }
+
+        return super.onKeyPress(source, keyCode, event, fragment);
+    }
 }

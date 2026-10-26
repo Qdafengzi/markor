@@ -1,9 +1,7 @@
 /*#######################################################
  *
- *   Maintained by Gregor Santner, 2017-
- *   https://gsantner.net/
- *
- *   License of this file: Apache 2.0 (Commercial upon request)
+ *   Maintained 2017-2025 by Gregor Santner <gsantner AT mailbox DOT org>
+ *   License of this file: Apache 2.0
  *     https://www.apache.org/licenses/LICENSE-2.0
  *
 #########################################################*/
@@ -19,7 +17,6 @@ import android.os.Build;
 
 import androidx.annotation.NonNull;
 
-import net.gsantner.markor.ApplicationObject;
 import net.gsantner.markor.R;
 import net.gsantner.markor.activity.openeditor.OpenFromShortcutOrWidgetActivity;
 import net.gsantner.markor.model.AppSettings;
@@ -62,13 +59,13 @@ public class ShortcutUtils {
             final ShortcutManager shortcutManager = context.getSystemService(ShortcutManager.class);
             final List<ShortcutInfo> newShortcuts = new ArrayList<>();
 
-            final AppSettings appSettings = ApplicationObject.settings();
+            final AppSettings appSettings = AppSettings.get(context);
 
             // Create the to-do shortcut
             final Intent openTodo = new Intent(context, OpenFromShortcutOrWidgetActivity.class)
                     .setAction(Intent.ACTION_EDIT)
                     .setData(Uri.fromFile(appSettings.getTodoFile()))
-                    .putExtra(Document.EXTRA_FILE_LINE_NUMBER, Document.EXTRA_FILE_LINE_NUMBER_LAST);
+                    .putExtra(Document.EXTRA_FILE_LINE_NUMBER, -1);
 
             final ShortcutInfo shortcutToDo = new ShortcutInfo.Builder(context, ID_TO_DO)
                     .setShortLabel(createShortLabel(context.getString(R.string.todo)))
@@ -82,7 +79,7 @@ public class ShortcutUtils {
             final Intent openQuickNote = new Intent(context, OpenFromShortcutOrWidgetActivity.class)
                     .setAction(Intent.ACTION_EDIT)
                     .setData(Uri.fromFile(appSettings.getQuickNoteFile()))
-                    .putExtra(Document.EXTRA_FILE_LINE_NUMBER, Document.EXTRA_FILE_LINE_NUMBER_LAST);
+                    .putExtra(Document.EXTRA_FILE_LINE_NUMBER, -1);
 
             final ShortcutInfo shortcutQuickNote = new ShortcutInfo.Builder(context, ID_QUICK_NOTE)
                     .setShortLabel(createShortLabel(context.getString(R.string.quicknote)))
@@ -99,6 +96,7 @@ public class ShortcutUtils {
                 final File file = new File(recentDocuments.get(i));
 
                 final Intent openFile = new Intent(context, OpenFromShortcutOrWidgetActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                         .setAction(Intent.ACTION_EDIT)
                         .setData(Uri.fromFile(file));
 

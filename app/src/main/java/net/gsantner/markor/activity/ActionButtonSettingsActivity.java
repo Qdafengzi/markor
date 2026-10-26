@@ -1,9 +1,7 @@
 /*#######################################################
  *
- *   Maintained by Gregor Santner, 2018-
- *   https://gsantner.net/
- *
- *   License of this file: Apache 2.0 (Commercial upon request)
+ *   Maintained 2018-2025 by Gregor Santner <gsantner AT mailbox DOT org>
+ *   License of this file: Apache 2.0
  *     https://www.apache.org/licenses/LICENSE-2.0
  *
 #########################################################*/
@@ -11,7 +9,6 @@ package net.gsantner.markor.activity;
 
 import static androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,11 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,9 +31,11 @@ import net.gsantner.markor.format.ActionButtonBase;
 import net.gsantner.markor.format.ActionButtonBase.ActionItem.DisplayMode;
 import net.gsantner.markor.format.asciidoc.AsciidocActionButtons;
 import net.gsantner.markor.format.markdown.MarkdownActionButtons;
+import net.gsantner.markor.format.orgmode.OrgmodeActionButtons;
 import net.gsantner.markor.format.plaintext.PlaintextActionButtons;
 import net.gsantner.markor.format.todotxt.TodoTxtActionButtons;
 import net.gsantner.markor.format.wikitext.WikitextActionButtons;
+import net.gsantner.opoc.util.GsCollectionUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -68,7 +67,6 @@ public class ActionButtonSettingsActivity extends MarkorBaseActivity {
         // Set up recyclerview
         final RecyclerView recycler = findViewById(R.id.action_order_activity_recycler);
         recycler.setLayoutManager(new LinearLayoutManager(this));
-        recycler.addItemDecoration(new DividerItemDecoration(recycler.getContext(), DividerItemDecoration.VERTICAL));
 
         extractActionData();
         _adapter = new OrderAdapter(_actions, _keys, _disabled);
@@ -86,7 +84,7 @@ public class ActionButtonSettingsActivity extends MarkorBaseActivity {
         final MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_order__menu, menu);
 
-        _cu.tintMenuItems(menu, true, Color.WHITE);
+        _cu.tintMenuItems(menu, true, _cu.rcolor(this, R.color.dark__primary_text));
         return true;
     }
 
@@ -99,12 +97,7 @@ public class ActionButtonSettingsActivity extends MarkorBaseActivity {
             }
 
             case R.id.action_reorder_reset: {
-                final List<String> activeKeys = _textActions.getActiveActionKeys();
-                for (int i = 0; i < activeKeys.size(); i++) {
-                    String key = activeKeys.get(i);
-                    _adapter.order.set(i, _keys.indexOf(key));
-                }
-                _adapter.notifyDataSetChanged();
+                _adapter.reset();
                 return true;
             }
         }
@@ -112,20 +105,20 @@ public class ActionButtonSettingsActivity extends MarkorBaseActivity {
     }
 
     private void saveNewOrder() {
-        final ArrayList<String> reorderedKeys = new ArrayList<>();
-
-        for (final int i : _adapter.order) {
-            reorderedKeys.add(_keys.get(i));
-        }
-
-        _textActions.saveActionOrder(reorderedKeys);
-        _textActions.saveDisabledActions(new ArrayList<>(_adapter._disabled));
+        _textActions.saveActionOrder(GsCollectionUtils.map(_adapter.order, i -> _keys.get(i)));
+        _textActions.saveDisabledActions(_adapter._disabled);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         saveNewOrder();
+    }
+
+    private void onActionDataExtracted(@NonNull final ActionButtonBase textActions) {
+        final Switch showActionBarSwitch = findViewById(R.id.showActionBarSwitch);
+        showActionBarSwitch.setChecked(textActions.loadActionBarVisible());
+        showActionBarSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> textActions.saveActionBarVisible(isChecked));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -140,6 +133,8 @@ public class ActionButtonSettingsActivity extends MarkorBaseActivity {
             _textActions = new WikitextActionButtons(this, null);
         } else if (documentType == R.string.pref_key__asciidoc__reorder_actions) {
             _textActions = new AsciidocActionButtons(this, null);
+        } else if (documentType == R.string.pref_key__orgmode__reorder_actions) {
+            _textActions = new OrgmodeActionButtons(this, null);
         } else { // Default to Plaintext
             _textActions = new PlaintextActionButtons(this, null);
         }
@@ -152,6 +147,8 @@ public class ActionButtonSettingsActivity extends MarkorBaseActivity {
         for (final String key : _keys) {
             _actions.add(actionMap.get(key));
         }
+
+        onActionDataExtracted(_textActions);
     }
 
     private static class Holder extends RecyclerView.ViewHolder {
@@ -179,10 +176,10 @@ public class ActionButtonSettingsActivity extends MarkorBaseActivity {
             ((TextView) _row.findViewById(R.id.action_text)).setText(action.stringId);
 
             _row.findViewById(R.id.is_edit_mode_action).setVisibility(
-                action.displayMode == DisplayMode.ANY || action.displayMode == DisplayMode.EDIT ? View.VISIBLE : View.INVISIBLE);
+                    action.displayMode == DisplayMode.ANY || action.displayMode == DisplayMode.EDIT ? View.VISIBLE : View.INVISIBLE);
 
             _row.findViewById(R.id.is_view_mode_action).setVisibility(
-                action.displayMode == DisplayMode.ANY || action.displayMode == DisplayMode.VIEW ? View.VISIBLE : View.INVISIBLE);
+                    action.displayMode == DisplayMode.ANY || action.displayMode == DisplayMode.VIEW ? View.VISIBLE : View.INVISIBLE);
         }
 
         public void setHighlight() {
@@ -199,6 +196,8 @@ public class ActionButtonSettingsActivity extends MarkorBaseActivity {
         private final List<String> _keys;
         private final Set<String> _disabled;
         private final List<Integer> order;
+        private final List<Integer> _initialOrder;
+        private final Set<String> _initialDisabled;
 
         private OrderAdapter(List<ActionButtonBase.ActionItem> actions, List<String> keys, List<String> disabled) {
             super();
@@ -210,6 +209,8 @@ public class ActionButtonSettingsActivity extends MarkorBaseActivity {
             for (int i = 0; i < _actions.size(); i++) {
                 order.add(i);
             }
+            _initialOrder = new ArrayList<>(order);
+            _initialDisabled = new HashSet<>(_disabled);
         }
 
         @NonNull
@@ -228,6 +229,14 @@ public class ActionButtonSettingsActivity extends MarkorBaseActivity {
         public int getItemCount() {
             return _actions.size();
         }
+
+        private void reset() {
+            order.clear();
+            order.addAll(_initialOrder);
+            _disabled.clear();
+            _disabled.addAll(_initialDisabled);
+            notifyDataSetChanged();
+        }
     }
 
     private class ReorderCallback extends ItemTouchHelper.SimpleCallback {
@@ -240,8 +249,8 @@ public class ActionButtonSettingsActivity extends MarkorBaseActivity {
 
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            final int from = viewHolder.getAdapterPosition();
-            final int to = target.getAdapterPosition();
+            final int from = viewHolder.getAbsoluteAdapterPosition();
+            final int to = target.getAbsoluteAdapterPosition();
 
             final int value = _adapter.order.get(from);
             _adapter.order.remove(from);

@@ -8,7 +8,7 @@
 👀 Convert, preview, and share documents as HTML and PDF  
 🖍 Formats: _Markdown, todo.txt_  & csv, ics, ini, json, toml, txt, vcf, yaml  
 📋 Copy to clipboard: Copy any text, including text shared into Markor  
-🎨 Highly customizeable, ~~black~~ dark theme available  
+🎨 Highly customizable, ~~black~~ dark theme available  
 👌 Privacy focused: No ads or unnecessary permissions
 
 > Hands down the best markdown note-taking app for Android
@@ -20,7 +20,7 @@
 - [x] No. 1 Markdown app on Google Play
 - [x] Also available on Aptoide, F-Droid & GitHub
 
-Blog / project page: [gsantner.net](https://gsantner.net) 
+Project page: <https://github.com/gsantner/markor>
 
 ![Markor Logo](https://raw.githubusercontent.com/gsantner/markor/master/app/src/main/ic_launcher-web.png)
 

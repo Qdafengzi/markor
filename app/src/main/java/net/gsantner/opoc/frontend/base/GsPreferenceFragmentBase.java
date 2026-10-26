@@ -1,9 +1,9 @@
 /*#######################################################
  *
- * SPDX-FileCopyrightText: 2018-2023 Gregor Santner <https://gsantner.net/>
+ * SPDX-FileCopyrightText: 2018-2025 Gregor Santner <gsantner AT mailbox DOT org>
  * SPDX-License-Identifier: Unlicense OR CC0-1.0
  *
- * Written 2018-2023 by Gregor Santner <https://gsantner.net/>
+ * Written 2018-2025 by Gregor Santner <gsantner AT mailbox DOT org>
  * To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
  * You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 #########################################################*/
@@ -74,6 +74,8 @@ import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceScreen;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.rarepebble.colorpicker.ColorPreference;
+
 import net.gsantner.opoc.model.GsSharedPreferencesPropertyBackend;
 import net.gsantner.opoc.util.GsContextUtils;
 import net.gsantner.opoc.wrapper.GsCallback;
@@ -89,7 +91,6 @@ import java.util.Set;
 @SuppressWarnings({"WeakerAccess", "unused", "UnusedReturnValue"})
 public abstract class GsPreferenceFragmentBase<AS extends GsSharedPreferencesPropertyBackend> extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener, PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
-    private static final int DEFAULT_ICON_TINT_DELAY = 200;
     protected boolean _isDividerVisible = false;
 
     //
@@ -144,39 +145,48 @@ public abstract class GsPreferenceFragmentBase<AS extends GsSharedPreferencesPro
     protected GsContextUtils _cu;
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        _appSettings = getAppSettings(context);
+        _cu = GsContextUtils.instance;
+    }
+
+    @Override
     @Deprecated
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         Activity activity = getActivity();
-        _appSettings = getAppSettings(activity);
-        _cu = GsContextUtils.instance;
         getPreferenceManager().setSharedPreferencesName(getSharedPreferencesName());
         addPreferencesFromResource(getPreferenceResourceForInflation());
 
         if (activity != null && activity.getTheme() != null) {
             TypedArray array = activity.getTheme().obtainStyledAttributes(new int[]{android.R.attr.colorBackground});
-            int bgcolor = array.getColor(0, 0xFFFFFFFF);
+            int bgcolor = array.getColor(0, 0xFFFFFF);
             _defaultIconTintColor = _cu.shouldColorOnTopBeLight(bgcolor) ? Color.WHITE : Color.BLACK;
         }
 
         // on bottom
         afterOnCreate(savedInstanceState, activity);
+        tintPreferenceIcons();
     }
 
-    public final GsCallback.a1<PreferenceFragmentCompat> updatePreferenceIcons = (frag) -> {
+    private void tintPreferenceIcons() {
         try {
-            View view = frag.getView();
             final Integer color = getIconTintColor();
-            if (view != null && color != null) {
-                Runnable r = () -> tintAllPrefIcons(frag, color);
-                for (long delayFactor : new int[]{1, 10, 50, 100, 500}) {
-                    view.postDelayed(r, delayFactor * DEFAULT_ICON_TINT_DELAY);
-                }
+            if (color == null) {
+                return;
+            }
+
+            tintAllPrefIcons(color);
+
+            final View view = getView();
+            if (view != null) {
+                view.post(() -> tintAllPrefIcons(color));
             }
         } catch (Exception ignored) {
         }
-    };
+    }
 
-    public void tintAllPrefIcons(PreferenceFragmentCompat preferenceFragment, @ColorInt int iconColor) {
+    public void tintAllPrefIcons(@ColorInt int iconColor) {
         tintPrefIconsRecursive(getPreferenceScreen(), iconColor);
     }
 
@@ -224,7 +234,6 @@ public abstract class GsPreferenceFragmentBase<AS extends GsSharedPreferencesPro
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        updatePreferenceIcons.callback(this);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             view.postDelayed(() -> {
@@ -264,6 +273,8 @@ public abstract class GsPreferenceFragmentBase<AS extends GsSharedPreferencesPro
     @Override
     public void onResume() {
         super.onResume();
+        _appSettings = getAppSettings(getActivity());
+        _cu = GsContextUtils.instance;
         updatePreferenceChangedListeners(true);
         doUpdatePreferences(); // Invoked later
         onPreferenceScreenChangedPriv(this, getPreferenceScreen());
@@ -292,6 +303,14 @@ public abstract class GsPreferenceFragmentBase<AS extends GsSharedPreferencesPro
             getView().postDelayed(r, 350);
         } else {
             r.run();
+        }
+    }
+
+    public void onDisplayPreferenceDialog(Preference preference) {
+        if (preference instanceof ColorPreference) {
+            ((ColorPreference) preference).showDialog(this, 0);
+        } else {
+            super.onDisplayPreferenceDialog(preference);
         }
     }
 
@@ -326,7 +345,7 @@ public abstract class GsPreferenceFragmentBase<AS extends GsSharedPreferencesPro
     public boolean onPreferenceStartScreen(PreferenceFragmentCompat preferenceFragmentCompat, PreferenceScreen preferenceScreen) {
         _prefScreenBackstack.add(getPreferenceScreen());
         preferenceFragmentCompat.setPreferenceScreen(preferenceScreen);
-        updatePreferenceIcons.callback(this);
+        tintPreferenceIcons();
         onPreferenceScreenChangedPriv(preferenceFragmentCompat, preferenceScreen);
         return true;
     }
@@ -523,7 +542,8 @@ public abstract class GsPreferenceFragmentBase<AS extends GsSharedPreferencesPro
 
     //###############################
     //### Divider
-    ////###############################
+
+    /// /###############################
 
 
     public boolean isDividerVisible() {

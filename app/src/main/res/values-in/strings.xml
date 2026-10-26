@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-A project by Gregor Santner (https://gsantner.net)
+Maintained 2017-2025 by Gregor Santner <gsantner AT mailbox DOT org>
 
 To the extent possible under law, the person who associated CC0 with
 this file has waived all copyright and related or neighboring rights
@@ -27,7 +27,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="create_folder">Buat Folder</string>
     <string name="create_new_document">Buat dokumen baru</string>
     <string name="move">Pindahkan</string>
-    <string name="copy">Salin</string>
     <string name="info">Informasi</string>
     <string name="file_folder_already_exists_please_use_a_different_name">File/folder sudah ada! Silahkan menggunakan nama lain</string>
     <string name="import_from_device">Impor dari perangkat</string>
@@ -57,6 +56,7 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="render_rtl_language">Tampilkan untuk bahasa dari kanan ke kiri</string>
     <string name="error_cannot_create_notebook_dir__appspecific">Error: Tidak dapat membuat direktori notebook</string>
     <string name="last_modified_witharg">Modifikasi terakhir: %s</string>
+    <string name="last_modified">Modifikasi terakhir</string>
     <string name="select_this_folder">Pilih folder ini</string>
     <string name="select">Pilih</string>
     <string name="create">Buat Baru</string>
@@ -67,10 +67,10 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="hide_statusbar">Sembunyikan kolom status</string>
     <string name="name">Nama</string>
     <string name="url_or_path">URL / Folder</string>
-    <string name="insert_link">Masukkan Link</string>
     <string name="insert_image">Masukkan Gambar/Foto</string>
     <string name="contributors">Kontributor</string>
     <string name="save_location">Lokasi penyimpanan</string>
+    <string name="saved_location_to">Disimpan ke %s</string>
     <string name="select_storage_folder">Pilih folder penyimpanan</string>
     <string name="licenses">Lisensi</string>
     <string name="changelog">Catatan Perubahan</string>
@@ -79,7 +79,7 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="show_third_party_licenses">Tampilkan lisensi pihak ketiga</string>
     <string name="language_change_restart_description">Mengubah bahasa aplikasi. Buka ulang aplikasi setelah mengubah preferensi bahasa</string>
     <string name="language">Bahasa</string>
-    <string name="error_need_storage_permission_to_save_documents">Dibutuhkan izin akses penyimpanan untuk menyimpan dokumen</string>
+    <string name="storage_permission_required">Izin penyimpanan diperlukan untuk membaca dan menulis berkas</string>
     <string name="open_with">Buka dengan</string>
     <string name="sort_by">Urut berdasarkan</string>
     <string name="date">Tanggal</string>
@@ -119,12 +119,12 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="file_not_in_current_folder_do_copy__appspecific">Berkas tidak terletak di folder saat ini. Apakah Anda ingin menyalinnya ke folder saat ini? Ini akan menimpa berkas yang ada dengan nama yang sama.</string>
     <string name="files_and_folders">Berkas dan folder</string>
     <string name="document_browser">Penjelajah dokumen</string>
-    <string name="file_browser">Penjelajah berkas</string>
     <string name="set_due_date">Atur batas waktu</string>
     <string name="insert_replace_date">Sisipkan tanggal</string>
     <string name="create_note" needed="false">Buat catatan</string>
     <string name="special_documents" needed="false">Dokumen spesial</string>
     <string name="keep_screen_on" needed="false">Biarkan layar tetap menyala</string>
+    <string name="disallow_screenshots">Larang tangkapan layar</string>
     <string name="back_to_previous_folder" needed="false">Kembali ke folder sebelumnya</string>
     <string name="app_settings" needed="false">Pengaturan aplikasi</string>
     <string name="editor_settings" needed="false">Pengaturan editor</string>
@@ -134,7 +134,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="main_view">Tampilan Utama</string>
     <string name="overall_theme_used_in_app">Tema keseluruhan yang digunakan di dalam aplikasi</string>
     <string name="remember_last_directory">Ingatkan direktori terakhir</string>
-    <string name="syntax_highlighting">Penyorotan sintaks</string>
     <string name="highlighting_delay">Menyoroti penundaan</string>
     <string name="highlighting_delay_lower_value_more_battery_drain_description__appspecific">Keterlambatan dalam milidetik untuk menyegarkan kembali penyorotan. Nilai yang lebih rendah akan mulai disorot lebih awal, tetapi akan menguras baterai Anda dan dapat memperlambat aplikasi pada perangkat yang lebih lama.</string>
     <string name="highlighting_enabled_or_not__appspecific">Mengontrol apakah teks yang dimasukkan harus disorot atau tidak</string>
@@ -171,17 +170,8 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="archive_does_move_done_tasks">Memindahkan tugas yang sudah selesai ke file yang ditentukan dalam folder yang sama</string>
     <string name="sort_tasks_by_selected_order">Urutkan tugas dari daftar yang dipilih</string>
     <string name="special_key">Kunci Spesial</string>
-    <string name="key_page_up">Halaman atas (Halaman atas)</string>
-    <string name="key_page_down">Halaman bawah (Halaman bawah)</string>
-    <string name="move_text_one_line_up">Pindah teks ke satu baris atas</string>
-    <string name="move_text_one_line_down">Pindah teks ke satu baris bawah</string>
-    <string name="start_new_line_below">Mulai baris baru dibawah</string>
-    <string name="key_pos_1">Baris memulai (Pos beranda)</string>
-    <string name="key_pos_end">Baris terakhir (Pos akhir)</string>
-    <string name="key_pos_1_document">Memulai dokumen</string>
-    <string name="key_pos_end_document">Dokumen akhir</string>
+    <string name="asciidoc_special_key">Isi AsciiDoc khusus</string>
     <string name="key_ctrl_a">Pilih semua (Ctrl+A)</string>
-    <string name="key_tab">Tabulator</string>
     <string name="start_on_bottom">Mulai dari bawah</string>
     <string name="start_on_bottom_when_loading_document">Setelah memuat dokumen, posisikan kursor di ujungnya</string>
     <string name="unordered_list_character">Karakter daftar yang tidak diurutkan</string>
@@ -190,6 +180,9 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="unordered_list_char_asterisk">Bintang (*)</string>
     <string name="unordered_list_char_plus">Tambah (+)</string>
     <string name="filemanager_doesnot_supply_required_data__appspecific">Markor hanya dapat mengedit file lokal, dokumen tersedia secara offline dan tidak mendukung pengelola berkas yang tidak menyertakan berkas utasan penuh.</string>
+    <string name="file_does_not_exist_and_cant_be_created">Berkas atau folder tidak ada dan tidak bisa dibuat</string>
+    <string name="permissions">Izin</string>
+    <string name="permission_not_granted">Izin tidak diberikan</string>
     <string name="sync_to_local_folder_notice">Catatan: Aplikasi sinkronisasi dapat menempatkan file di folder kustom. Buka dengan mengubah folder dokumen Markor yang sesuai, atau di pengelola file lain.</string>
     <string name="vertical_alignment">Letak vertikal</string>
     <string name="horizontal_alignment">Letak horizontal</string>
@@ -199,6 +192,8 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="top">Atas</string>
     <string name="bottom">Bawah</string>
     <string name="center">Tengah</string>
+    <string name="actionbutton_spacing">Penjarakkan TombolAksi</string>
+    <string name="horizontal_space_between_actionbuttons">Jarak horizontal antar TombolAksi</string>
     <string name="center_text">Teks tengah</string>
     <string name="edit_text_in_center_of_screen">Edit teks di tengah layar</string>
     <string name="clipboard">Papan klip</string>
@@ -215,6 +210,7 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="project_license">Lisensi Proyek</string>
     <string name="contribute_code_to_this_project_anybody_welcome">Kode kontribusi untuk proyek. Semua orang dipersilakan untuk melakukannya, termasuk pendatang baru</string>
     <string name="project_team">Tim proyek</string>
+    <string name="community">Komunitas</string>
     <string name="contributors_public_add_yourself_description">Tampilkan info kontributor. Berikan untuk ditampilkan di sini secara opt-in setelah berkontribusi</string>
     <string name="descending">menurun</string>
     <string name="ascending">menaik</string>
@@ -242,7 +238,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="no_calendar_app_is_installed">Tidak ada aplikasi kalender yang diinstal!</string>
     <string name="popular_documents">Dokumen populer</string>
     <string name="color">Warna</string>
-    <string name="zero_width_space">Spasi jarak nol</string>
     <string name="basic_color_scheme">Skema warna dasar</string>
     <string name="background_foreground_color_in_editor_works_dark_light">Mengubah latar belakang dan warna latar depan editor teks. Menyesuaikan dengan tema aplikasi sehingga tersedia dalam tema terang dan gelap. Sintaks menyoroti warna tetap sama.</string>
     <string name="preset">Pengaturan tersimpan</string>
@@ -260,7 +255,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="pick_date">Pilih tanggal</string>
     <string name="pick_time">Pilih waktu</string>
     <string name="get_format_instead_date_or_time">Dapatkan format sebagai gantinya tanggal atau waktu</string>
-    <string name="always_use_current_date_and_time">Selalu gunakan tanggal &amp; waktu saat ini</string>
     <string name="result">Hasil</string>
     <string name="just_time">Hanya waktu</string>
     <string name="just_date">Hanya tanggal</string>
@@ -282,12 +276,9 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="notebook_is_the_home_of_your_files">Notebook adalah folder yang dimuat Markor di browser file saat aplikasi dimulai. Ini adalah folder beranda dari file Anda.</string>
     <string name="quicknote_is_the_fastest_option_to_write_down_notes">QuickNote adalah opsi tercepat untuk menuliskan catatan. Ini adalah file dalam format Markdown dengan lokasi default &gt;Notebook/QuickNote.md&lt;, Anda bisa mengatur jalur file kustom di pengaturan.</string>
     <string name="todo_is_the_easiest_way_">Kelola tugas Anda dengan ToDo. Ini adalah file dalam format todo.txt dengan lokasi default &gt;Notebook/todo.txt&lt;, Anda dapat mengatur jalur file kustom di pengaturan.</string>
-    <string name="navigationbar_color">Warna bilah navigasi</string>
     <string name="black">Hitam</string>
     <string name="white">Putih</string>
     <string name="view">Lihat</string>
-    <string name="view_mode">Mode tampilan</string>
-    <string name="edit_mode">Mode edit</string>
     <string name="mount_storage">Penyimpanan mount</string>
     <string name="application_needs_access_to_storage_mount_it">Izin diperlukan untuk mengakses penyimpanan ini. Mount penyimpanan untuk memberikan akses. Konfirmasikan dialog ini untuk mendapatkan popup. Pilih penyimpanan di sana dan tekan pilih.</string>
     <string name="share_into">Berbagi ke</string>
@@ -300,11 +291,10 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="selected_file_may_be_a_textfile_want_to_open_in_editor">File yang dipilih mungkin adalah file plaintext. Apakah Anda ingin membukanya di editor, atau di aplikasi lain? \n\nApakah Anda tidak mencoba membuka file binary. Jika Anda tidak yakin, buka dengan aplikasi lain.</string>
     <string name="list_in_recent_files">Daftar dalam file terbaru</string>
     <string name="reload">Muat ulang</string>
-    <string name="wrap_words">Pembungkus kata</string>
     <string name="soft_break_if_not_fit_to_width_else_enable_horizontal_scrolling">Break ringan jika teks tidak sesuai dengan lebar layar. Lainnya, mengaktifkan pengguliran horizontal.</string>
-    <string name="recursive_search_in_current_directory">Pencarian rekursif di direktori saat ini.</string>
     <string name="always_open_with_this_app">Selalu buka dengan aplikasi ini</string>
     <string name="always_open_files_with_this_app_when_list_contains_file_extension">Selalu buka file dengan aplikasi ini saat daftar berisi ekstensi file. Gunakan \'None, .html, .css, .js\' misalnya jika Anda ingin mengedit file web dan yang tanpa ekstensi file.</string>
+    <string name="open_file_with">Buka file dengan</string>
     <string name="rotate">Rotasi</string>
     <string name="template">Sampul</string>
     <string name="send_debug_log">Kirim Log Debug</string>
@@ -365,6 +355,7 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="file_encryption_password">Sandi enkripsi berkas</string>
     <string name="no_password_set_cannot_encrypt_decrypt">Tidak ada kumpulan kata sandi, tidak dapat mengenkripsi atau mendekripsi.\nPergi ke Setelan -&gt; Umum &gt; Kata Sandi untuk mengatur kata sandi.</string>
     <string name="encrypt_file_content">Enkripsi konten file</string>
+    <string name="utf8_with_bom">UTF-8 dengan BOM</string>
     <string name="could_not_encrypt_file_content_the_file_was_not_saved">Tak bisa mengenkripsi konten file. Berkas tidak disimpan.</string>
     <string name="could_not_decrypt_file_content_wrong_password_or_is_the_file_maybe_not_encrypted">Tak bisa mendekripsi konten file. Apakah Anda menggunakan password yang salah? Apakah file benar-benar dienkripsi dengan enkripsi Markor AES?</string>
     <string name="password_already_set_setting_a_new_password_will_overwrite">Kata sandi sudah diatur. Mengatur kata sandi baru akan menimpa kata sandi yang ada dan Anda mungkin tidak dapat mengakses file lagi jika Anda lupa kata sandi.</string>
@@ -374,7 +365,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="file_description_format">Deskripsi format file</string>
     <string name="file_description_format_dialog">Format untuk deskripsi di bawah setiap file di browser file. Mengikuti aturan SimpleDateFormat Android, dengan penambahan FS untuk menampilkan ukuran file. Biarkan kosong untuk menggunakan format default untuk lokal Anda.\n\nContoh input:\nFS yyyy MMM dd hh:mm:ss aa\nOutput format:\n30KB 2020 Mar 20 11:24:52 PM</string>
     <string name="loading_default_value">Memuat nilai default</string>
-    <string name="file_settings">Setelan file</string>
     <string name="search_and_replace">Cari / Ganti</string>
     <string name="search_for">Cari untuk</string>
     <string name="replace_with">Ganti dengan</string>
@@ -418,6 +408,12 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="due_today">Tenggat hari ini</string>
     <string name="due_future">Tenggat mendatang</string>
     <string name="completed">Diselesaikan</string>
+    <string name="advanced_filtering">Filter lanjutan</string>
     <string name="match_any">Cocokkan apa saja</string>
     <string name="match_all">Cocokkan semua</string>
+    <string name="share_into_format">Bagikan dalam bentuk - format</string>
+    <string name="auto_format">Format otomatis</string>
+    <string name="insert_snippet">Sisipkan cuplikan</string>
+    <string name="error_could_not_open_file">Kesalahan: Tidak dapat membuka file.</string>
+    <string name="wont_save_min_length">File-file dengan karakter kurang dari %d tidak otomatis tersimpan untuk menghindari hilangnya data.</string>
 </resources>

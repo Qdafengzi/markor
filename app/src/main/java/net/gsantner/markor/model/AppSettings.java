@@ -1,9 +1,7 @@
 /*#######################################################
  *
- *   Maintained by Gregor Santner, 2017-
- *   https://gsantner.net/
- *
- *   License of this file: Apache 2.0 (Commercial upon request)
+ *   Maintained 2017-2025 by Gregor Santner <gsantner AT mailbox DOT org>
+ *   License of this file: Apache 2.0
  *     https://www.apache.org/licenses/LICENSE-2.0
  *
 #########################################################*/
@@ -11,48 +9,68 @@ package net.gsantner.markor.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Pair;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 
+import net.gsantner.markor.ApplicationObject;
 import net.gsantner.markor.BuildConfig;
 import net.gsantner.markor.R;
+import net.gsantner.markor.activity.MarkorBaseActivity;
 import net.gsantner.markor.format.FormatRegistry;
 import net.gsantner.markor.util.MarkorContextUtils;
 import net.gsantner.markor.util.ShortcutUtils;
 import net.gsantner.opoc.format.GsTextUtils;
 import net.gsantner.opoc.frontend.filebrowser.GsFileBrowserListAdapter;
 import net.gsantner.opoc.model.GsSharedPreferencesPropertyBackend;
+import net.gsantner.opoc.util.GsCollectionUtils;
 import net.gsantner.opoc.util.GsContextUtils;
 import net.gsantner.opoc.util.GsFileUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import other.de.stanetz.jpencconverter.PasswordStore;
 
 @SuppressWarnings({"SameParameterValue", "WeakerAccess", "FieldCanBeLocal"})
 public class AppSettings extends GsSharedPreferencesPropertyBackend {
-    private SharedPreferences _prefCache;
-    private SharedPreferences _prefHistory;
+    private final SharedPreferences _prefCache;
+    private final SharedPreferences _prefHistory;
     public static Boolean _isDeviceGoodHardware = null;
-    private MarkorContextUtils _cu;
+    private final MarkorContextUtils _cu;
 
-    private static final File LOCAL_TESTFOLDER_FILEPATH = new File("/storage/emulated/0/00_sync/documents/special");
+    public static AppSettings get(final Context context) {
+        if (context instanceof MarkorBaseActivity) {
+            return ((MarkorBaseActivity) context).getAppSettings();
+        } else if (context != null) {
+            return new AppSettings(context);
+        } else {
+            return ApplicationObject.settings();
+        }
+    }
 
-    @Override
-    public AppSettings init(final Context context) {
-        super.init(context);
+    public AppSettings(final Context context) {
+        super(context, SHARED_PREF_APP);
         _prefCache = context.getSharedPreferences("cache", Context.MODE_PRIVATE);
         _prefHistory = context.getSharedPreferences("history", Context.MODE_PRIVATE);
         _cu = new MarkorContextUtils(context);
@@ -62,7 +80,6 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
             setEditorBasicColor(true, R.color.white, R.color.dark_grey);
             setEditorBasicColor(false, R.color.dark_grey, R.color.light__background);
         }
-        return this;
     }
 
     public boolean isLoadLastDirectoryAtStartup() {
@@ -73,56 +90,53 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
         return getBool(R.string.pref_key__is_preview_first, false);
     }
 
-    public void setSaveDirectory(String value) {
-        setString(R.string.pref_key__notebook_directory, value);
+    public void setNotebookDirectory(final File file) {
+        setString(R.string.pref_key__notebook_directory, GsFileUtils.getPath(file));
     }
-
 
     public File getNotebookDirectory() {
-        return new File(getNotebookDirectoryAsStr());
+        return new File(getString(R.string.pref_key__notebook_directory, getDefaultNotebookFile().getAbsolutePath()));
     }
 
-    public String getNotebookDirectoryAsStr() {
-        String dir = getString(R.string.pref_key__notebook_directory, "");
-        if (dir.isEmpty() && LOCAL_TESTFOLDER_FILEPATH.exists() && !BuildConfig.IS_TEST_BUILD) {
-            dir = LOCAL_TESTFOLDER_FILEPATH.getParentFile().getParent();
-            setSaveDirectory(dir);
-        }
-        if (dir.isEmpty()) {
-            dir = new File(new File(Environment.getExternalStorageDirectory(), "/Documents")
-                    , rstr(R.string.app_name).toLowerCase(Locale.ROOT))
-                    .getAbsolutePath();
-            setSaveDirectory(dir);
-        }
-        return dir;
+    public File getDefaultNotebookFile() {
+        return GsFileUtils.join(
+                Environment.getExternalStorageDirectory(),
+                "Documents",
+                rstr(R.string.app_name).toLowerCase(Locale.ROOT));
     }
 
     public File getQuickNoteFile() {
-        String defaultValue = new File(getNotebookDirectoryAsStr(), rstr(R.string.quicknote_default_filename)).getAbsolutePath();
-        if (LOCAL_TESTFOLDER_FILEPATH.exists() && !BuildConfig.IS_TEST_BUILD) {
-            defaultValue = new File(LOCAL_TESTFOLDER_FILEPATH, rstr(R.string.quicknote_default_filename)).getAbsolutePath();
-        }
-        return new File(getString(R.string.pref_key__quicknote_filepath, defaultValue));
+        return new File(getString(R.string.pref_key__quicknote_filepath, getDefaultQuickNoteFile().getAbsolutePath()));
     }
 
     public void setQuickNoteFile(final File file) {
-        setString(R.string.pref_key__quicknote_filepath, file.getAbsolutePath());
+        setString(R.string.pref_key__quicknote_filepath, GsFileUtils.getPath(file));
+    }
+
+    public File getDefaultQuickNoteFile() {
+        return new File(getDefaultNotebookFile(), rstr(R.string.quicknote_default_filename));
     }
 
     public File getTodoFile() {
-        String defaultValue = new File(getNotebookDirectoryAsStr(), rstr(R.string.todo_default_filename)).getAbsolutePath();
-        if (LOCAL_TESTFOLDER_FILEPATH.exists() && !BuildConfig.IS_TEST_BUILD) {
-            defaultValue = new File(LOCAL_TESTFOLDER_FILEPATH, rstr(R.string.todo_default_filename)).getAbsolutePath();
-        }
-        return new File(getString(R.string.pref_key__todo_filepath, defaultValue));
+        return new File(getString(R.string.pref_key__todo_filepath, getDefaultTodoFile().getAbsolutePath()));
     }
 
-    public void setTodoFile(File file) {
-        setString(R.string.pref_key__todo_filepath, file.getAbsolutePath());
+    public void setTodoFile(final File file) {
+        setString(R.string.pref_key__todo_filepath, GsFileUtils.getPath(file));
     }
 
-    public File getSnippetsFolder() {
-        return new File(getNotebookDirectory(), ".app/snippets");
+    public File getDefaultTodoFile() {
+        return new File(getDefaultNotebookFile(), rstr(R.string.todo_default_filename));
+    }
+
+    public File getSnippetsDirectory() {
+        final File _default = new File(getNotebookDirectory(), ".app/snippets");
+        final File snf = new File(getString(R.string.pref_key__snippet_directory_path, _default.getAbsolutePath()));
+        return snf.isDirectory() && snf.canRead() ? snf : _default;
+    }
+
+    public void setSnippetDirectory(final File folder) {
+        setString(R.string.pref_key__snippet_directory_path, GsFileUtils.getPath(folder));
     }
 
     public String getFontFamily() {
@@ -133,13 +147,36 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
         return getInt(R.string.pref_key__editor_font_size, 15);
     }
 
-    public int getViewFontSize() {
+    private int getDefaultViewFontSize() {
         int size = getInt(R.string.pref_key__view_font_size, -1);
         return size < 2 ? getFontSize() : size;
     }
 
+    public void setDocumentViewFontSize(final String path, int size) {
+        if (fexists(path)) {
+            setInt(PREF_PREFIX_VIEW_FONT_SIZE + path, size);
+        }
+    }
+
+    public int getDocumentViewFontSize(final String path) {
+        final int _default = getDefaultViewFontSize();
+        if (!fexists(path)) {
+            return _default;
+        } else {
+            return getInt(PREF_PREFIX_VIEW_FONT_SIZE + path, _default);
+        }
+    }
+
     public boolean isHighlightingEnabled() {
         return getBool(R.string.pref_key__is_highlighting_activated, true);
+    }
+
+    public boolean isLineNumbersEnabled() {
+        return getBool(R.string.pref_key__enable_line_numbers, false);
+    }
+
+    public void setLineNumbersEnabled(boolean enabled) {
+        setBool(R.string.pref_key__enable_line_numbers, enabled);
     }
 
     public boolean isDynamicHighlightingEnabled() {
@@ -152,6 +189,10 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
 
     public int getAsciidocHighlightingDelay() {
         return getInt(R.string.pref_key__asciidoc__hl_delay, 650);
+    }
+
+    public int getOrgmodeHighlightingDelay() {
+        return getInt(R.string.pref_key__orgmode__hl_delay, 650);
     }
 
     public boolean isMarkdownHighlightLineEnding() {
@@ -239,35 +280,59 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
         return ret;
     }
 
-    public String setFileBrowserSortByType(String v) {
-        setString(R.string.pref_key__file_browser__sort_by_type, v);
-        return v;
+    private final String PREF_PREFIX_FOLDER_SORT_ORDER = "PREF_PREFIX_FOLDER_SORT_ORDER";
+
+    /**
+     * Set sort order for a folder or globally.
+     * Passing null as folder will set the global sort order.
+     * Passing null as sortOrder will remove the sort order for the folder (revert to global).
+     *
+     * @param folder    Folder to set the sort order for
+     * @param sortOrder Sort order to set
+     */
+    public void setFolderSortOrder(final @Nullable File folder, final @Nullable GsFileUtils.SortOrder sortOrder) {
+        if (folder == null && sortOrder == null) {
+            return;
+        }
+
+        // Null folders have empty suffix
+        final String key = PREF_PREFIX_FOLDER_SORT_ORDER + GsFileUtils.getPath(folder);
+
+        if (sortOrder == null) {
+            remove(key);
+            return;
+        }
+
+        setString(key, sortOrder.toString());
     }
 
-    public String getFileBrowserSortByType() {
-        return getString(R.string.pref_key__file_browser__sort_by_type, GsFileUtils.SORT_BY_NAME);
-    }
+    /**
+     * Get sort order for a folder or globally.
+     * If no sort order is set for the folder, the global sort order is returned.
+     * If folder is null, the global sort order is returned.
+     *
+     * @param folder
+     * @return
+     */
+    public GsFileUtils.SortOrder getFolderSortOrder(final @Nullable File folder) {
+        // Null folders have empty suffix
+        final String path = GsFileUtils.getPath(folder);
+        final String key = PREF_PREFIX_FOLDER_SORT_ORDER + path;
+        String json = getString(key, null);
 
-    public boolean setFileBrowserSortReverse(boolean value) {
-        setBool(R.string.pref_key__sort_reverse, value);
-        return value;
-    }
+        final boolean isFolderLocal = !GsTextUtils.isNullOrEmpty(path) && json != null;
 
-    public boolean isFileBrowserSortReverse() {
-        return getBool(R.string.pref_key__sort_reverse, false);
-    }
+        if (!isFolderLocal) {
+            json = getString(PREF_PREFIX_FOLDER_SORT_ORDER, null);
+        }
 
-    public boolean setFileBrowserFilterShowDotFiles(boolean v) {
-        setBool(R.string.pref_key__show_dot_files_v2, v);
-        return v;
-    }
-
-    public boolean isFileBrowserFilterShowDotFiles() {
-        return getBool(R.string.pref_key__show_dot_files_v2, true);
+        final GsFileUtils.SortOrder order = GsFileUtils.SortOrder.fromString(json);
+        order.isFolderLocal = isFolderLocal;
+        return order;
     }
 
     public boolean isShowSettingsOptionInMainToolbar() {
-        return true;//getBool(R.string.pref_key__show_settings_option_in_main_toolbar, true);
+        return false; // getBool(R.string.pref_key__show_settings_option_in_main_toolbar, true);
     }
 
     public boolean isHighlightingHexColorEnabled() {
@@ -307,49 +372,60 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
     }
 
     public int getEditorActionButtonItemPadding() {
-        return getInt(R.string.pref_key__editor_textaction_bar_item_padding, 8);
+        return getInt(R.string.pref_key__editor_textaction_bar_item_padding, 6);
     }
 
     public boolean isDisableSpellingRedUnderline() {
         return getBool(R.string.pref_key__editor_disable_spelling_red_underline, true);
     }
 
-    public void addRecentDocument(File file) {
+    public void addRecentFile(final File file) {
         if (!listFileInRecents(file)) {
             return;
         }
+        final String path = GsFileUtils.getPath(file);
         if (!file.equals(getTodoFile()) && !file.equals(getQuickNoteFile())) {
             ArrayList<String> recent = getRecentDocuments();
-            recent.add(0, file.getAbsolutePath());
-            recent.remove(getTodoFile().getAbsolutePath());
-            recent.remove(getQuickNoteFile().getAbsolutePath());
+            recent.add(0, path);
+            recent.remove(GsFileUtils.getPath(getTodoFile()));
+            recent.remove(GsFileUtils.getPath(getQuickNoteFile()));
             recent.remove("");
             recent.remove(null);
 
-            setInt(file.getAbsolutePath(), getInt(file.getAbsolutePath(), 0, _prefCache) + 1, _prefCache);
+            setInt(path, getInt(path, 0, _prefCache) + 1, _prefCache);
             setRecentDocuments(recent);
         }
         ShortcutUtils.setShortcuts(_context);
     }
 
-    public void toggleFavouriteFile(File file) {
-        List<String> list = new ArrayList<>();
-        List<File> favourites = getFavouriteFiles();
-        for (File f : favourites) {
-            if (f != null && (f.exists() || GsFileBrowserListAdapter.isVirtualStorage(f))) {
-                list.add(f.getAbsolutePath());
+    public void setFavouriteFiles(final Collection<File> files) {
+        final Set<String> set = new LinkedHashSet<>();
+        for (final File f : files) {
+            if (GsFileUtils.exists(f)) {
+                set.add(GsFileUtils.getPath(f));
             }
         }
-        String abs = file.getAbsolutePath();
-        if (list.contains(abs)) {
-            list.remove(abs);
+
+        setStringList(R.string.pref_key__favourite_files, GsCollectionUtils.map(set, p -> p));
+    }
+
+    public void setFavouriteFile(final File file, final boolean favourite) {
+        final Set<File> favourites = getFavouriteFiles();
+        if (favourite) {
+            favourites.add(file);
         } else {
-            list.add(abs);
+            favourites.remove(file);
         }
-        setStringList(R.string.pref_key__favourite_files, list);
+        setFavouriteFiles(favourites);
+    }
+
+    public void toggleFavouriteFile(final File file) {
+        setFavouriteFile(file, !getFavouriteFiles().contains(file));
     }
 
     private static final String PREF_PREFIX_EDIT_POS_CHAR = "PREF_PREFIX_EDIT_POS_CHAR";
+    private static final String PREF_PREFIX_EDIT_SCROLL_Y = "PREF_PREFIX_EDIT_SCROLL_Y";
+    private static final String PREF_PREFIX_EDIT_HEIGHT = "PREF_PREFIX_EDIT_HEIGHT";
     private static final String PREF_PREFIX_WRAP_STATE = "PREF_PREFIX_WRAP_STATE";
     private static final String PREF_PREFIX_HIGHLIGHT_STATE = "PREF_PREFIX_HIGHLIGHT_STATE";
     private static final String PREF_PREFIX_PREVIEW_STATE = "PREF_PREFIX_PREVIEW_STATE";
@@ -357,9 +433,11 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
     private static final String PREF_PREFIX_FONT_SIZE = "PREF_PREFIX_FONT_SIZE";
     private static final String PREF_PREFIX_FILE_FORMAT = "PREF_PREFIX_FILE_FORMAT";
     private static final String PREF_PREFIX_AUTO_FORMAT = "PREF_PREFIX_AUTO_FORMAT";
-    private static final String PREF_PREFIX_VIEW_SCROLL_X = "PREF_PREFIX_VIEW_SCROLL_X";
     private static final String PREF_PREFIX_VIEW_SCROLL_Y = "PREF_PREFIX_VIEW_SCROLL_Y";
+    private static final String PREF_PREFIX_VIEW_HEIGHT = "PREF_PREFIX_VIEW_HEIGHT";
     private static final String PREF_PREFIX_TODO_DONE_NAME = "PREF_PREFIX_TODO_DONE_NAME";
+    private static final String PREF_PREFIX_LINE_NUM_STATE = "PREF_PREFIX_LINE_NUM_STATE";
+    private static final String PREF_PREFIX_VIEW_FONT_SIZE = "PREF_PREFIX_VIEW_FONT_SIZE";
 
     public void setLastTodoDoneName(final String path, final String name) {
         if (fexists(path)) {
@@ -382,6 +460,26 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
         }
     }
 
+    public void setLastEditScrollY(final String path, final int scrollY) {
+        if (fexists(path)) {
+            setInt(PREF_PREFIX_EDIT_SCROLL_Y + path, scrollY);
+        }
+    }
+
+    public void setLastEditHeight(final String path, final int height) {
+        if (fexists(path)) {
+            setInt(PREF_PREFIX_EDIT_HEIGHT + path, height);
+        }
+    }
+
+    public int getLastEditHeight(final String path, final int def) {
+        if (!fexists(path)) {
+            return def;
+        } else {
+            return getInt(PREF_PREFIX_EDIT_HEIGHT + path, def);
+        }
+    }
+
     public int getLastEditPosition(final String path, final int def) {
         if (!fexists(path)) {
             return def;
@@ -390,13 +488,39 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
         }
     }
 
-    public void setLastViewPosition(File file, int scrollX, int scrollY) {
-        if (file == null || !file.exists()) {
-            return;
+    public int getLastEditScrollY(final String path, final int def) {
+        if (!fexists(path)) {
+            return def;
+        } else {
+            return getInt(PREF_PREFIX_EDIT_SCROLL_Y + path, def);
         }
-        if (!file.equals(getTodoFile()) && !file.equals(getQuickNoteFile())) {
-            setInt(PREF_PREFIX_VIEW_SCROLL_X + file.getAbsolutePath(), scrollX, _prefCache);
-            setInt(PREF_PREFIX_VIEW_SCROLL_Y + file.getAbsolutePath(), scrollY, _prefCache);
+    }
+
+    public void setLastViewScrollY(final String path, final int scrollY) {
+        if (fexists(path)) {
+            setInt(PREF_PREFIX_VIEW_SCROLL_Y + path, scrollY);
+        }
+    }
+
+    public int getLastViewScrollY(final String path, final int def) {
+        if (!fexists(path)) {
+            return def;
+        } else {
+            return getInt(PREF_PREFIX_VIEW_SCROLL_Y + path, def);
+        }
+    }
+
+    public void setLastViewHeight(final String path, final int height) {
+        if (fexists(path)) {
+            setInt(PREF_PREFIX_VIEW_HEIGHT + path, height);
+        }
+    }
+
+    public int getLastViewHeight(final String path, final int def) {
+        if (!fexists(path)) {
+            return def;
+        } else {
+            return getInt(PREF_PREFIX_VIEW_HEIGHT + path, def);
         }
     }
 
@@ -415,6 +539,21 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
         }
     }
 
+    public void setDocumentLineNumbersEnabled(final String path, final boolean enabled) {
+        if (fexists(path)) {
+            setBool(PREF_PREFIX_LINE_NUM_STATE + path, enabled);
+        }
+    }
+
+    public boolean getDocumentLineNumbersEnabled(final String path) {
+        final boolean _default = false;
+        if (!fexists(path)) {
+            return _default;
+        } else {
+            return getBool(PREF_PREFIX_LINE_NUM_STATE + path, _default);
+        }
+    }
+
     public void setDocumentFormat(final String path, @StringRes final int format) {
         if (fexists(path) && format != FormatRegistry.FORMAT_UNKNOWN) {
             setString(PREF_PREFIX_FILE_FORMAT + path, _context.getString(format));
@@ -427,9 +566,11 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
             return _default;
         } else {
             final String value = getString(PREF_PREFIX_FILE_FORMAT + path, null);
+            if (value == null) {
+                return _default;
+            }
             final int sid = _cu.getResId(_context, GsContextUtils.ResType.STRING, value);
-            // Note TextFormat.FORMAT_UNKNOWN also == 0
-            return sid != 0 ? sid : _default;
+            return sid != FormatRegistry.FORMAT_UNKNOWN ? sid : _default;
         }
     }
 
@@ -485,6 +626,7 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
     public boolean getDocumentPreviewState(final String path) {
         // Use global setting as default
         final boolean _default = isPreferViewMode();
+        // Always open in preview state when prefer preview mode is enabled
         if (_default || !fexists(path)) {
             return _default;
         } else {
@@ -501,28 +643,10 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
         return getBool(PREF_PREFIX_HIGHLIGHT_STATE + path, lengthOk && isHighlightingEnabled());
     }
 
-    public int getLastViewPositionX(File file) {
-        if (file == null || !file.exists()) {
-            return -1;
-        }
-        return getInt(PREF_PREFIX_VIEW_SCROLL_X + file.getAbsolutePath(), -3, _prefCache);
-    }
-
-    public int getLastViewPositionY(File file) {
-        if (file == null || !file.exists()) {
-            return -1;
-        }
-        return getInt(PREF_PREFIX_VIEW_SCROLL_Y + file.getAbsolutePath(), -3, _prefCache);
-    }
-
     private List<String> getPopularDocumentsSorted() {
         List<String> popular = getRecentDocuments();
         Collections.sort(popular, (o1, o2) -> Integer.compare(getInt(o1, 0, _prefCache), getInt(o2, 0, _prefCache)));
         return popular;
-    }
-
-    public List<String> getPopularDocuments() {
-        return getStringList(R.string.pref_key__popular_documents);
     }
 
     public void setPopularDocuments(List<String> v) {
@@ -537,7 +661,7 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
     }
 
     public ArrayList<String> getRecentDocuments() {
-        ArrayList<String> list = getStringList(R.string.pref_key__recent_documents);
+        final ArrayList<String> list = getStringList(R.string.pref_key__recent_documents);
         for (int i = 0; i < list.size(); i++) {
             if (!new File(list.get(i)).isFile()) {
                 list.remove(i);
@@ -555,15 +679,27 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
         return r;
     }
 
-    public ArrayList<File> getFavouriteFiles() {
-        ArrayList<File> list = new ArrayList<>();
-        for (String fp : getStringList(R.string.pref_key__favourite_files)) {
-            File f = new File(fp);
-            if (f.exists() || GsFileBrowserListAdapter.isVirtualStorage(f)) {
-                list.add(f);
+    public static Set<File> getFileSet(final List<String> paths) {
+        final Set<File> set = new LinkedHashSet<>();
+        for (final String fp : paths) {
+            final File f = new File(fp);
+            if (GsFileUtils.exists(f)) {
+                set.add(f);
             }
         }
-        return list;
+        return set;
+    }
+
+    public Set<File> getFavouriteFiles() {
+        return getFileSet(getStringList(R.string.pref_key__favourite_files));
+    }
+
+    public Set<File> getRecentFiles() {
+        return getFileSet(getStringList(R.string.pref_key__recent_documents));
+    }
+
+    public Set<File> getPopularFiles() {
+        return getFileSet(getStringList(R.string.pref_key__popular_documents));
     }
 
     public String getInjectedHeader() {
@@ -578,12 +714,12 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
         return true;//getBool(R.string.pref_key__editor_history_enabled3, true);
     }
 
-    public int getEditorForegroundColor() {
+    public @ColorInt int getEditorForegroundColor() {
         final boolean night = GsContextUtils.instance.isDarkModeEnabled(_context);
         return getInt(night ? R.string.pref_key__basic_color_scheme__fg_dark : R.string.pref_key__basic_color_scheme__fg_light, rcolor(R.color.primary_text));
     }
 
-    public int getEditorBackgroundColor() {
+    public @ColorInt int getEditorBackgroundColor() {
         final boolean night = GsContextUtils.instance.isDarkModeEnabled(_context);
         int c = getInt(night ? R.string.pref_key__basic_color_scheme__bg_dark : R.string.pref_key__basic_color_scheme__bg_light, rcolor(R.color.background));
         if (getAppThemeName().contains("black")) {
@@ -600,6 +736,29 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
         return getString(R.string.pref_key__app_theme, _context.getString(R.string.app_theme_system));
     }
 
+    public boolean isFlatTopBottomBarColorEnabled() {
+        return getBool(R.string.pref_key__ui_flat_top_bottom_bars, false);
+    }
+
+    public boolean isMainBottomBarTabTitlesShown() {
+        return getBool(R.string.pref_key__main_bottom_bar_show_tab_titles, true);
+    }
+
+    public boolean isFileBrowserDividerEnabled() {
+        return getBool(R.string.pref_key__file_browser_show_dividers, true);
+    }
+
+    public @ColorInt int getUiBackgroundColor() {
+        if (getAppThemeName().contains("black")) {
+            return Color.BLACK;
+        }
+        return rcolor(R.color.background);
+    }
+
+    public @ColorInt int getConfiguredBarBackgroundColor() {
+        return isFlatTopBottomBarColorEnabled() ? getUiBackgroundColor() : rcolor(R.color.primary);
+    }
+
     public void setEditorBasicColor(boolean forDarkMode, @ColorRes int fgColor, @ColorRes int bgColor) {
         int resIdFg = forDarkMode ? R.string.pref_key__basic_color_scheme__fg_dark : R.string.pref_key__basic_color_scheme__fg_light;
         int resIdBg = forDarkMode ? R.string.pref_key__basic_color_scheme__bg_dark : R.string.pref_key__basic_color_scheme__bg_light;
@@ -609,7 +768,7 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
 
     public boolean isMultiWindowEnabled() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return getBool(R.string.pref_key__is_multi_window_enabled, true);
+            return getBool(R.string.pref_key__is_multi_window_enabled, false);
         } else {
             return false;
         }
@@ -688,63 +847,47 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
         return getBool(R.string.pref_key__filesystem_folder_first, true);
     }
 
-    public String getNavigationBarColor() {
-        return getString(R.string.pref_key__navigationbar_color, "#000000");
+    public String getAppStartupFolderMenuId() {
+        return getString(R.string.pref_key__app_start_folder, "notebook");
     }
 
-    public @IdRes
-    Integer getAppStartupFolderMenuId() {
-        switch (getString(R.string.pref_key__app_start_folder, "notebook")) {
-            case "favourites":
-                return R.id.action_go_to_favourite_files;
-            case "internal_storage":
-                return R.id.action_go_to_storage;
-            case "appdata_public":
-                return R.id.action_go_to_appdata_public;
-            case "appdata_private":
-                return R.id.action_go_to_appdata_private;
-            case "popular_documents":
-                return R.id.action_go_to_popular_files;
-            case "recently_viewed_documents":
-                return R.id.action_go_to_recent_files;
-        }
-        return R.id.action_go_to_home;
-    }
-
-    public File getFolderToLoadByMenuId(int itemId) {
+    public File getFolderToLoadByMenuId(String itemId) {
         List<Pair<File, String>> appDataPublicDirs = _cu.getAppDataPublicDirs(_context, false, true, false);
         switch (itemId) {
-            case R.id.action_go_to_home: {
+            case "storage": {
+                return new File("/storage");
+            }
+            case "notebook": {
                 return getNotebookDirectory();
             }
-            case R.id.action_go_to_popular_files: {
+            case "popular_documents": {
                 return GsFileBrowserListAdapter.VIRTUAL_STORAGE_POPULAR;
             }
-            case R.id.action_go_to_recent_files: {
+            case "recently_viewed_documents": {
                 return GsFileBrowserListAdapter.VIRTUAL_STORAGE_RECENTS;
             }
-            case R.id.action_go_to_favourite_files: {
+            case "favourites": {
                 return GsFileBrowserListAdapter.VIRTUAL_STORAGE_FAVOURITE;
             }
-            case R.id.action_go_to_appdata_private: {
+            case "appdata_private": {
                 return _cu.getAppDataPrivateDir(_context);
             }
-            case R.id.action_go_to_storage: {
+            case "internal_storage": {
                 return Environment.getExternalStorageDirectory();
             }
-            case R.id.action_go_to_appdata_sdcard_1: {
+            case "appdata_sdcard_1": {
                 if (appDataPublicDirs.size() > 0) {
                     return appDataPublicDirs.get(0).first;
                 }
                 return Environment.getExternalStorageDirectory();
             }
-            case R.id.action_go_to_appdata_sdcard_2: {
+            case "appdata_sdcard_2": {
                 if (appDataPublicDirs.size() > 1) {
                     return appDataPublicDirs.get(1).first;
                 }
                 return Environment.getExternalStorageDirectory();
             }
-            case R.id.action_go_to_appdata_public: {
+            case "appdata_public": {
                 appDataPublicDirs = _cu.getAppDataPublicDirs(_context, true, false, false);
                 if (appDataPublicDirs.size() > 0) {
                     return appDataPublicDirs.get(0).first;
@@ -760,16 +903,16 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
     }
 
     public boolean listFileInRecents(File file) {
-        return getBool(file.getAbsolutePath() + "_list_in_recents", true);
+        return getBool(GsFileUtils.getPath(file) + "_list_in_recents", true);
     }
 
     public void setListFileInRecents(File file, boolean value) {
-        setBool(file.getAbsolutePath() + "_list_in_recents", value);
+        setBool(GsFileUtils.getPath(file) + "_list_in_recents", value);
 
         if (!value) {
             ArrayList<String> recent = getRecentDocuments();
-            if (recent.contains(file.getAbsolutePath())) {
-                recent.remove(file.getAbsolutePath());
+            if (recent.contains(GsFileUtils.getPath(file))) {
+                recent.remove(GsFileUtils.getPath(file));
                 setRecentDocuments(recent);
             }
         }
@@ -784,28 +927,40 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
     }*/
 
     public int getRating(File file) {
-        return getInt(file.getAbsolutePath() + "_rating", 0);
+        return getInt(GsFileUtils.getPath(file) + "_rating", 0);
     }
 
     public void setRating(File file, int value) {
-        setInt(file.getAbsolutePath() + "_rating", value);
+        setInt(GsFileUtils.getPath(file) + "_rating", value);
     }
 
     public boolean isEditorLineBreakingEnabled() {
         return getBool(R.string.pref_key__editor_enable_line_breaking, true);
     }
 
-    private List<String> extSettingCache;
+    private List<String> _extSettingCache = null;
 
     public synchronized boolean isExtOpenWithThisApp(String ext) {
-        if (ext.equals("")) {
-            ext = "None";
-        }
-        if (extSettingCache == null) {
+        if (_extSettingCache == null) {
             String pref = getString(R.string.pref_key__exts_to_always_open_in_this_app, "");
-            extSettingCache = Arrays.asList(pref.toLowerCase().replace(",,", ",None,").replace(" ", "").split(","));
+            _extSettingCache = Arrays.asList(pref.toLowerCase()
+                    .replace("none", "")   // none == no ext
+                    .replace(" ", "")      // remove spaces
+                    .replace(",.", ",")    // remove leading dot
+                    .split(","));
         }
-        return extSettingCache.contains(ext) || extSettingCache.contains(".*");
+
+        ext = ext.trim();
+        ext = ext.startsWith(".") ? ext.substring(1) : ext;
+        return _extSettingCache.contains(ext) || _extSettingCache.contains("*");
+    }
+
+    public boolean isIndentWithTabKey() {
+        return getBool(R.string.pref_key__editor_tab_to_indent, false);
+    }
+
+    public boolean isStaticCursorEnabled() {
+        return getBool(R.string.pref_key__editor_static_cursor, false);
     }
 
     public boolean isExperimentalFeaturesEnabled() {
@@ -813,7 +968,7 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
     }
 
     public boolean isHighlightBiggerHeadings() {
-        return getBool(R.string.pref_key__editor_markdown_bigger_headings_2, false);
+        return getBool(R.string.pref_key__editor_markdown_bigger_headings_3, false);
     }
 
     public String getViewModeLinkColor() {
@@ -865,19 +1020,24 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
     }
 
     public int getNewFileDialogLastUsedType() {
-        return getInt(R.string.pref_key__new_file_dialog_lastused_type, 0);
+        try {
+            final String typeStr = getString(R.string.pref_key__new_file_dialog_lastused_type, "");
+            return _cu.getResId(_context, GsContextUtils.ResType.STRING, typeStr);
+        } catch (ClassCastException e) {
+            return FormatRegistry.FORMAT_MARKDOWN;
+        }
     }
 
-    public void setNewFileDialogLastUsedType(int i) {
-        setInt(R.string.pref_key__new_file_dialog_lastused_type, i);
+    public void setNewFileDialogLastUsedType(final int format) {
+        setString(R.string.pref_key__new_file_dialog_lastused_type, _context.getString(format));
     }
 
     public void setFileBrowserLastBrowsedFolder(File f) {
-        setString(R.string.pref_key__file_browser_last_browsed_folder, f.getAbsolutePath());
+        setString(R.string.pref_key__file_browser_last_browsed_folder, GsFileUtils.getPath(f));
     }
 
     public File getFileBrowserLastBrowsedFolder() {
-        return new File(getString(R.string.pref_key__file_browser_last_browsed_folder, getNotebookDirectoryAsStr()));
+        return new File(getString(R.string.pref_key__file_browser_last_browsed_folder, getNotebookDirectory().getAbsolutePath()));
     }
 
     public boolean getSetWebViewFulldrawing(boolean... setValue) {
@@ -908,5 +1068,108 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
 
     public String getShareIntoPrefix() {
         return getString(R.string.pref_key__share_into_format, "\\n----\\n{{text}}");
+    }
+
+    public @NonNull
+    File getAttachmentFolder(final File file) {
+        final File parent = file.getParentFile();
+        if (parent == null) {
+            return getNotebookDirectory();
+        }
+        final String child = getString(R.string.pref_key__attachment_folder_name, "_res").trim();
+        return GsTextUtils.isNullOrEmpty(child) ? parent : new File(parent, child);
+    }
+
+    public List<Pair<String, String>> getBuiltinTemplates() {
+        final List<Pair<String, String>> templates = new ArrayList<>();
+        final String templateAssetDir = "templates";
+        try {
+            // Assuming templates are stored in res/raw directory
+            final AssetManager am = _context.getAssets();
+            final String[] names = am.list("templates");
+            for (final String name : names) {
+                try (final InputStream is = am.open(templateAssetDir + File.separator + name)) {
+                    final String contents = GsFileUtils.readInputStreamFast(is, null).first;
+                    templates.add(Pair.create(name, contents));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return templates;
+    }
+
+    // Read all plain text files in the snippets folder
+    public List<File> getSnippetFiles() {
+        final File dir = getSnippetsDirectory();
+        if (dir != null && dir.isDirectory()) {
+            final File[] files = dir.listFiles(f -> f.isFile()
+                    && (GsFileUtils.isContentsPlainText(f) || GsFileUtils.isTextFile(f)));
+            if (files != null) {
+                Arrays.sort(files, (f1, f2) -> f1.getName().compareToIgnoreCase(f2.getName()));
+                return Arrays.asList(files);
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    public void setTypeTemplate(final @StringRes int format, final String template) {
+        final String js = getString(R.string.pref_key__filetype_template_map, "{}");
+        final Map<String, String> map = GsTextUtils.jsonStringToMap(js);
+        map.put(_context.getString(format), template);
+        setString(R.string.pref_key__filetype_template_map, GsTextUtils.mapToJsonString(map));
+    }
+
+    public @Nullable String getTypeTemplate(final @StringRes int format) {
+        final String js = getString(R.string.pref_key__filetype_template_map, "{}");
+        final Map<String, String> map = GsTextUtils.jsonStringToMap(js);
+        return map.get(format == 0 ? "" : _context.getString(format));
+    }
+
+    public void setTemplateTitleFormat(final String templateName, final String titleFormat) {
+        final String js = getString(R.string.pref_key__template_title_format_map, "{}");
+        final Map<String, String> map = GsTextUtils.jsonStringToMap(js);
+        map.put(templateName, titleFormat);
+        setString(R.string.pref_key__template_title_format_map, GsTextUtils.mapToJsonString(map));
+    }
+
+    public @Nullable String getTemplateTitleFormat(final String templateName) {
+        final String js = getString(R.string.pref_key__template_title_format_map, "{}");
+        final Map<String, String> map = GsTextUtils.jsonStringToMap(js);
+        return map.get(templateName);
+    }
+
+    public Set<String> getTitleFormats() {
+        final String js = getString(R.string.pref_key__title_format_list, "[]");
+        final Set<String> formats = new LinkedHashSet<>(GsTextUtils.jsonStringToList(js));
+        formats.addAll(Arrays.asList(
+                "`yyyy-MM-dd`-{{title}}",
+                "{{date}}_{{title}}",
+                "{{date}}T{{time}}_{{title}}",
+                "`yyyyMMddHHmmss`_{{title}}",
+                "{{uuid}}"
+        ));
+        return formats;
+    }
+
+    public void saveTitleFormat(final String format, final int maxCount) {
+        final Set<String> formats = getTitleFormats();
+        final Set<String> updated = new LinkedHashSet<>(Collections.singleton(format));
+        for (final String f : formats) {
+            updated.add(f);
+            if (updated.size() >= maxCount) {
+                break;
+            }
+        }
+        setString(R.string.pref_key__title_format_list, GsTextUtils.listToJsonString(updated));
+    }
+
+    public void setFormatShareAsLink(final boolean asLink) {
+        setBool(R.string.pref_key__format_share_as_link, asLink);
+    }
+
+    public boolean getFormatShareAsLink() {
+        return getBool(R.string.pref_key__format_share_as_link, true);
     }
 }

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?><!--
     /*#######################################################
     *
-    *   Maintained by Gregor Santner, 2017-
-    *   https://gsantner.net/
+    *   Maintained 2017-2025 by Gregor Santner <gsantner AT mailbox DOT org>
     *
-    *   License: Apache 2.0 / Commercial
+    *   License: Apache 2.0
     *  https://github.com/gsantner/opoc/#licensing
     *  https://www.apache.org/licenses/LICENSE-2.0
     *
@@ -47,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:ellipsize="middle"
-            android:singleLine="true"
+            android:lines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             tools:text="cool document.md" />
 
@@ -114,6 +113,25 @@
                 android:layout_gravity="center_vertical"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 tools:text="859KB (81234 Bytes)" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="16dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="@string/mime_type"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/ui__fileinfodialog__mimetype_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                tools:text="text/plain" />
         </LinearLayout>
 
         <LinearLayout
@@ -140,7 +158,26 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                tools:text="5 / 3 / 4" />
+                tools:text="0 / 0 / 0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="16dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="@string/sha_256"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/ui__fileinfodialog__sha_256"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                tools:text="0" />
 
         </LinearLayout>
 
@@ -161,9 +198,15 @@
             <CheckBox
                 android:id="@+id/ui__fileinfodialog__recents"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
                 android:text="@string/list_in_recent_files" />
+
+            <CheckBox
+                android:id="@+id/ui__fileinfodialog__favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="@string/favourite" />
 
             <TextView
                 android:layout_width="wrap_content"

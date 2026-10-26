@@ -1,9 +1,7 @@
 /*#######################################################
  *
- *   Maintained by Gregor Santner, 2017-
- *   https://gsantner.net/
- *
- *   License of this file: Apache 2.0 (Commercial upon request)
+ *   Maintained 2017-2025 by Gregor Santner <gsantner AT mailbox DOT org>
+ *   License of this file: Apache 2.0
  *     https://www.apache.org/licenses/LICENSE-2.0
  *
 #########################################################*/
@@ -20,9 +18,10 @@ public class OpenShareIntoActivity extends OpenEditorActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent openShare = new Intent(this, OpenFromShortcutOrWidgetActivity.class)
+        final Intent openShare = new Intent(this, OpenFromShortcutOrWidgetActivity.class)
                 .setAction(Intent.ACTION_SEND)
                 .putExtra(Intent.EXTRA_TEXT, "");
-        openActivityAndClose(openShare, null);
+
+        _cu.animateToActivity(this, openShare, true, 1);
     }
 }

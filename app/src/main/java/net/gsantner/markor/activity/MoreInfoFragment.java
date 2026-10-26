@@ -1,9 +1,8 @@
 /*#######################################################
  *
- *   Maintained by Gregor Santner, 2017-
- *   https://gsantner.net/
+ *   Maintained 2017-2025 by Gregor Santner <gsantner AT mailbox DOT org>
  *
- *   License of this file: Apache 2.0 (Commercial upon request)
+ *   License of this file: Apache 2.0
  *     https://www.apache.org/licenses/LICENSE-2.0
  *     https://github.com/gsantner/opoc/#licensing
  *
@@ -19,7 +18,6 @@ import android.net.Uri;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceGroup;
 
-import net.gsantner.markor.ApplicationObject;
 import net.gsantner.markor.R;
 import net.gsantner.markor.model.AppSettings;
 import net.gsantner.opoc.format.GsSimpleMarkdownParser;
@@ -47,7 +45,7 @@ public class MoreInfoFragment extends GsPreferenceFragmentBase<AppSettings> {
 
     @Override
     protected AppSettings getAppSettings(Context context) {
-        return ApplicationObject.settings();
+        return AppSettings.get(context);
     }
 
     @Override
@@ -80,7 +78,7 @@ public class MoreInfoFragment extends GsPreferenceFragmentBase<AppSettings> {
                 }
                 case R.string.pref_key__more_info__help: {
                     _cu.openWebpageInExternalBrowser(getContext(),
-                            String.format("https://gsantner.net/project/%s.html?source=inapp_more_help_faq", getString(R.string.app_name_real).toLowerCase()));
+                            String.format("https://github.com/gsantner/%s#readme", getString(R.string.app_name_real).toLowerCase()));
                     return true;
                 }
                 case R.string.pref_key__more_info__bug_reports: {

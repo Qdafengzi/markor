@@ -1,9 +1,7 @@
 /*#######################################################
  *
- *   Maintained by Gregor Santner, 2018-
- *   https://gsantner.net/
- *
- *   License of this file: Apache 2.0 (Commercial upon request)
+ *   Maintained 2018-2025 by Gregor Santner <gsantner AT mailbox DOT org>
+ *   License of this file: Apache 2.0
  *     https://www.apache.org/licenses/LICENSE-2.0
  *
 #########################################################*/
@@ -12,7 +10,7 @@ package net.gsantner.markor.format.asciidoc;
 import net.gsantner.markor.format.ActionButtonBase;
 import net.gsantner.markor.frontend.textview.AutoTextFormatter;
 import net.gsantner.markor.frontend.textview.ReplacePatternGeneratorHelper;
-import net.gsantner.markor.frontend.textview.TextViewUtils;
+import net.gsantner.opoc.format.GsTextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +104,7 @@ public class AsciidocReplacePatternGenerator {
         List<ActionButtonBase.ReplacePattern> patterns = new ArrayList<>();
 
         // AsciiDoc uses '=' to mark sections (headers).
-        String heading = TextViewUtils.repeatChars('=', level);
+        String heading = GsTextUtils.repeatChars('=', level);
 
         // pattern no 1:
         // Then and only then, if the current line matches the level, the header should be removed

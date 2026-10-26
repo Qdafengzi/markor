@@ -1,25 +1,28 @@
 /*#######################################################
  *
- * SPDX-FileCopyrightText: 2017-2023 Gregor Santner <https://gsantner.net/>
+ * SPDX-FileCopyrightText: 2017-2025 Gregor Santner <gsantner AT mailbox DOT org>
  * SPDX-License-Identifier: Unlicense OR CC0-1.0
  *
- * Written 2018-2023 by Gregor Santner <https://gsantner.net/>
+ * Written 2018-2025 by Gregor Santner <gsantner AT mailbox DOT org>
  * To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
  * You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 #########################################################*/
 package net.gsantner.opoc.util;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import net.gsantner.opoc.format.GsTextUtils;
-import net.gsantner.opoc.wrapper.GsCallback;
-import net.gsantner.opoc.wrapper.GsFileWithMetadataCache;
-import net.gsantner.opoc.wrapper.GsHashMap;
+import net.gsantner.opoc.frontend.filebrowser.GsFileBrowserListAdapter;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -36,7 +39,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -44,12 +54,16 @@ import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Stack;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
@@ -61,8 +75,8 @@ public class GsFileUtils {
     public final static SimpleDateFormat DATEFORMAT_IMG = new SimpleDateFormat("yyyyMMdd-HHmmss", INITIAL_LOCALE); //20190511-230845
 
     // Used on methods like copyFile(src, dst)
-    private static final int BUFFER_SIZE = 4096;
-    private static final GsHashMap<String, String> MIME_TYPE_CACHE = new GsHashMap<>();
+    private final static int BUFFER_SIZE = 4096;
+    private final static Map<String, String> MIME_TYPE_CACHE = new ConcurrentHashMap<>();
 
     /**
      * Info of various types about a file
@@ -72,14 +86,15 @@ public class GsFileUtils {
         public boolean ioError = false;
     }
 
-    public static Pair<String, FileInfo> readTextFileFast(final File file) {
-        final FileInfo info = new FileInfo();
+    public static Pair<String, FileInfo> readInputStreamFast(final InputStream inputStream, @Nullable FileInfo info) {
+        info = info == null ? new FileInfo() : info;
 
-        try (final FileInputStream inputStream = new FileInputStream(file)) {
+        try {
             final ByteArrayOutputStream result = new ByteArrayOutputStream();
 
             final byte[] bomBuffer = new byte[3];
             final int bomReadLength = inputStream.read(bomBuffer);
+
             info.hasBom = bomReadLength == 3 &&
                     bomBuffer[0] == (byte) 0xEF &&
                     bomBuffer[1] == (byte) 0xBB &&
@@ -97,10 +112,23 @@ public class GsFileUtils {
                 result.write(buffer, 0, length);
             }
             return new Pair<>(result.toString("UTF-8"), info);
+        } catch (IOException e) {
+            e.printStackTrace();
+            info.ioError = true;
+        }
+
+        return new Pair<>("", info);
+    }
+
+    public static Pair<String, FileInfo> readTextFileFast(final File file) {
+        final FileInfo info = new FileInfo();
+
+        try (final FileInputStream inputStream = new FileInputStream(file)) {
+            return readInputStreamFast(inputStream, info);
         } catch (FileNotFoundException e) {
             System.err.println("readTextFileFast: File " + file + " not found.");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("readTextFileFast: File " + file + " could not be read.");
             info.ioError = true;
         }
 
@@ -267,6 +295,7 @@ public class GsFileUtils {
                     is.close();
                 }
                 if (os != null) {
+                    os.flush();
                     os.close();
                 }
             }
@@ -389,38 +418,48 @@ public class GsFileUtils {
     }
 
     // Get relative path to specified destination
-    public static String relativePath(File src, File dest) {
-        try {
-            String[] srcSplit = (src.isDirectory() ? src : src.getParentFile()).getCanonicalPath().split(Pattern.quote(File.separator));
-            String[] destSplit = dest.getCanonicalPath().split(Pattern.quote(File.separator));
-            StringBuilder sb = new StringBuilder();
-            int i = 0;
+    public static String relativePath(final File src, final File dest) {
+        final File srcDir = src.isFile() ? src.getParentFile() : src;
+        final String srcStr = getPath(srcDir);
+        final String destStr = getPath(dest);
 
-            for (; i < destSplit.length && i < srcSplit.length; ++i) {
-                if (!destSplit[i].equals(srcSplit[i]))
-                    break;
-            }
-            if (i != srcSplit.length) {
-                for (int iUpperDir = i; iUpperDir < srcSplit.length; ++iUpperDir) {
-                    sb.append("..");
-                    sb.append(File.separator);
-                }
-            }
-            for (; i < destSplit.length; ++i) {
-                sb.append(destSplit[i]);
+        final String[] srcSplit = srcStr.split(Pattern.quote(File.separator));
+        final String[] destSplit = destStr.split(Pattern.quote(File.separator));
+
+        int commonLength = 0;
+        for (; commonLength < destSplit.length && commonLength < srcSplit.length; ++commonLength) {
+            if (!destSplit[commonLength].equals(srcSplit[commonLength]))
+                break;
+        }
+
+        final StringBuilder sb = new StringBuilder();
+
+        if (commonLength != srcSplit.length) {
+            for (int iUpperDir = commonLength; iUpperDir < srcSplit.length; ++iUpperDir) {
+                sb.append("..");
                 sb.append(File.separator);
             }
-            if (!dest.getPath().endsWith("/") && !dest.getPath().endsWith("\\")) {
-                sb.delete(sb.length() - File.separator.length(), sb.length());
-            }
-            return sb.toString();
-        } catch (IOException | NullPointerException exception) {
-            return null;
         }
+
+        for (; commonLength < destSplit.length; ++commonLength) {
+            sb.append(destSplit[commonLength]);
+            sb.append(File.separator);
+        }
+
+        if (GsTextUtils.endsWith(sb, File.separator)) {
+            // Strip trailing separator so file selections don't keep a trailing slash
+            sb.delete(sb.length() - File.separator.length(), sb.length());
+        }
+
+        if (sb.length() == 0) {
+            sb.append(".");
+        }
+
+        return sb.toString();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
-    private final static GsCallback.s1<File> gatherMimeType = file -> {
+    private static String gatherMimeType(final File file) {
         if (file == null) {
             return "*/*";
         }
@@ -436,6 +475,8 @@ public class GsFileUtils {
             return "text/markdown";
         } else if (ext.matches("(te?xt)|(taskpaper)")) {
             return "text/plain";
+        } else if (ext.matches("org")) {
+            return "text/org";
         } else if (ext.matches("webp")) {
             return "image/webp";
         } else if (ext.matches("jpe?g")) {
@@ -482,27 +523,44 @@ public class GsFileUtils {
         } catch (Exception ignored) {
         }
         return "*/*";
-    };
+    }
 
     /**
      * Try to detect MimeType by backwards compatible methods
      * Android/Java's own MimeType mapping support is small and detection barely works at all
      * Hence use custom map for some file extensions
      */
-    public static String getMimeType(File file) {
-        MIME_TYPE_CACHE.limitSizeByRemovingOldest(350);
+    public static String getMimeType(final File file) {
         final String fp = file.getAbsolutePath();
-        String mime = MIME_TYPE_CACHE.getOrDefault(fp, null);
+        String mime = MIME_TYPE_CACHE.get(fp);
         if (mime == null) {
-            mime = gatherMimeType.callback(file);
-            MIME_TYPE_CACHE.add(fp, mime);
+            mime = gatherMimeType(file);
+            MIME_TYPE_CACHE.put(fp, mime);
         }
         return mime;
     }
 
-    public static boolean isTextFile(File file) {
+    public static boolean isTextFile(final File file) {
         final String mime = getMimeType(file);
-        return mime != null && mime.startsWith("text/");
+        return mime != null && (mime.startsWith("text/") || mime.contains("xml")) && !mime.contains("openxml");
+    }
+
+    /**
+     * Reads the first kb of a file and checks if it is likely a text file
+     **/
+    public static boolean isContentsPlainText(final File file) {
+        // Empty files are considered text files
+        if (file.length() == 0) {
+            return true;
+        }
+
+        try (final FileInputStream fis = new FileInputStream(file)) {
+            final byte[] bytes = readCloseStreamWithSize(fis, 1024);
+            Charset.forName("UTF-8").newDecoder().decode(java.nio.ByteBuffer.wrap(bytes));
+            return true;
+        } catch (Exception ignored) {
+            return false;
+        }
     }
 
     /**
@@ -581,6 +639,18 @@ public class GsFileUtils {
         return file;
     }
 
+    public static File join(final File... files) {
+        if (files == null || files.length == 0) {
+            return null;
+        }
+
+        File result = files[0];
+        for (int i = 1; i < files.length; i++) {
+            result = new File(result, files[i].getAbsolutePath());
+        }
+        return result;
+    }
+
     private static String hash(final byte[] data, final String alg) {
         try {
             return Arrays.toString(MessageDigest.getInstance(alg).digest(data));
@@ -589,12 +659,33 @@ public class GsFileUtils {
         }
     }
 
-    public static String md5(final byte[] data) {
-        return hash(data, "MD5");
-    }
+    public static String sha256(final File file) {
+        if (file == null || !file.exists() || !file.isFile()) {
+            return null;
+        }
 
-    public static String sha512(final byte[] data) {
-        return hash(data, "SHA-512");
+        try (final FileInputStream fis = new FileInputStream(file)) {
+            final MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            final byte[] buffer = new byte[BUFFER_SIZE];
+            int bytesRead;
+
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                digest.update(buffer, 0, bytesRead);
+            }
+
+            byte[] hashBytes = digest.digest();
+            StringBuilder hexString = new StringBuilder();
+
+            for (byte b : hashBytes) {
+                hexString.append(String.format("%02x", b));
+            }
+
+            return hexString.toString();
+
+        } catch (IOException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static long crc32(final CharSequence data) {
@@ -635,16 +726,25 @@ public class GsFileUtils {
 
     // Get the title of the file
     public static String getFilenameWithoutExtension(final File file) {
-        final String name = file.getName();
-        final int doti = name.lastIndexOf(".");
-        return (doti < 0) ? name : name.substring(0, doti);
+        return getNameWithoutExtension(file.getName());
     }
 
-    /// Get the file extension of the file, including dot
+    public static String getNameWithoutExtension(String fileName) {
+        fileName = fileName.replace(".jenc", "");
+        final int doti = fileName.lastIndexOf(".");
+        return (doti < 0) ? fileName : fileName.substring(0, doti);
+    }
+
     public static String getFilenameExtension(final File file) {
-        final String name = file.getName().replace(".jenc", "");
-        final int doti = name.lastIndexOf(".");
-        return (doti < 0) ? "" : name.substring(doti).toLowerCase();
+        return getFilenameExtension(file.getName());
+    }
+
+    /// Get the file extension of the file, with dot
+    ///
+    /// @return "" -> "", "index" -> "", "index.html" -> ".html", "my.website.html" -> ".html"
+    public static String getFilenameExtension(String name) {
+        name = name.replace(".jenc", "");
+        return name.contains(".") ? name.replaceAll(".*?(\\.[^.]+)$", "$1") : "";
     }
 
     public static String getFilteredFilenameWithoutDisallowedChars(String str, final boolean... a1NoRCEguard) {
@@ -675,81 +775,277 @@ public class GsFileUtils {
         return filename;
     }
 
+    public static String getPrefix(final String name) {
+        return name.split("_")[0];
+    }
 
     public static final String SORT_BY_NAME = "NAME", SORT_BY_FILESIZE = "FILESIZE", SORT_BY_MTIME = "MTIME", SORT_BY_MIMETYPE = "MIMETYPE";
 
-    public static Comparator<File> sortFiles(List<File> filesToSort, final String sortBy, final boolean sortFolderFirst, final boolean sortReverse) {
-        final Comparator<File> detailComparator = (current, other) -> {
-            if (sortReverse) {
-                File swap = current;
-                current = other;
-                other = swap;
+    /**
+     * Get a key which can be use to sort File objects
+     * This is highly performant as each file is processed exactly once.
+     * Inspired by python's sort
+     *
+     * @param sortBy String key of what to sort
+     * @param file   The file object to get the
+     * @return A key which can be used for comparisons / sorting
+     */
+    private static String makeSortKey(final String sortBy, final File file) {
+        final String name = file.getName().toLowerCase();
+        switch (sortBy) {
+            case SORT_BY_MTIME: {
+                return file.lastModified() + name;
             }
+            case SORT_BY_FILESIZE: {
+                return String.format("%015d", file.length()) + name;
+            }
+            case SORT_BY_MIMETYPE: {
+                return getMimeType(file).toLowerCase() + name;
+            }
+            case SORT_BY_NAME:
+            default: {
+                return name;
+            }
+        }
+    }
 
-            switch (sortBy) {
-                case SORT_BY_MTIME: {
-                    return Long.compare(other.lastModified(), current.lastModified());
-                }
-                case SORT_BY_FILESIZE: {
-                    return Long.compare(other.length(), current.length());
-                }
-                case SORT_BY_NAME: {
-                    return current.getName().compareToIgnoreCase(other.getName());
-                }
-                case SORT_BY_MIMETYPE: {
-                    String mic = getMimeType(current), mio = getMimeType(other);
-                    return !mic.equalsIgnoreCase(mio) ? mic.compareToIgnoreCase(mio) : current.getName().compareToIgnoreCase(other.getName());
-                }
-            }
-            return current.compareTo(other);
-        };
+    public static class SortOrder {
+        public String sortByType = SORT_BY_NAME;
+        public boolean reverse = false;
+        public boolean showDotFiles = false;
+        public boolean folderFirst = true;
+        public boolean isFolderLocal = false;
 
-        final Comparator<File> mainComparator = (current, other) -> {
-            if (current == null || other == null) {
-                return 0;
-            } else if (current.isDirectory() && sortFolderFirst) {
-                return other.isDirectory() ? detailComparator.compare(current, other) : -1;
-            } else if (other.isDirectory() && sortFolderFirst) {
-                return 1;
-            }
-            int v = detailComparator.compare(current, other);
-            if (v != 0) {
-                return v;
-            }
-            return current.getName().compareToIgnoreCase(other.getName());
-        };
+        private final static String SORT_BY_KEY = "SORT_BY";
+        private final static String REVERSE_KEY = "REVERSE";
+        private final static String SHOW_DOT_FILES_KEY = "SHOW_DOT_FILES";
+        private final static String FOLDER_FIRST_KEY = "FOLDER_FIRST";
 
-        if (filesToSort != null) {
+        @NonNull
+        @Override
+        public String toString() {
+            final Map<String, String> map = new HashMap<>();
+            map.put(SORT_BY_KEY, sortByType);
+            map.put(REVERSE_KEY, String.valueOf(reverse));
+            map.put(SHOW_DOT_FILES_KEY, String.valueOf(showDotFiles));
+            map.put(FOLDER_FIRST_KEY, String.valueOf(folderFirst));
+            return GsTextUtils.mapToJsonString(map);
+        }
+
+        public static SortOrder fromString(final String json) {
+            final SortOrder fso = new SortOrder();
+            final Map<String, String> map = GsTextUtils.jsonStringToMap(json);
+            fso.sortByType = GsCollectionUtils.getOrDefault(map, SORT_BY_KEY, SORT_BY_NAME);
+            fso.reverse = Boolean.parseBoolean(GsCollectionUtils.getOrDefault(map, REVERSE_KEY, "false"));
+            fso.showDotFiles = Boolean.parseBoolean(GsCollectionUtils.getOrDefault(map, SHOW_DOT_FILES_KEY, "false"));
+            fso.folderFirst = Boolean.parseBoolean(GsCollectionUtils.getOrDefault(map, FOLDER_FIRST_KEY, "true"));
+            return fso;
+        }
+    }
+
+    public static void sortFiles(final Collection<File> filesToSort, final SortOrder order) {
+        if (filesToSort != null && !filesToSort.isEmpty()) {
             try {
-                Collections.sort(filesToSort, mainComparator);
+                final boolean copy = !(filesToSort instanceof List);
+                final List<File> sortable = copy ? new ArrayList<>(filesToSort) : (List<File>) filesToSort;
+
+                GsCollectionUtils.keySort(sortable, (f) -> makeSortKey(order.sortByType, f), new AlphanumComparator());
+                if (order.reverse) {
+                    Collections.reverse(sortable);
+                }
+                if (order.folderFirst) {
+                    GsCollectionUtils.keySort(sortable, (f) -> !f.isDirectory());
+                }
+
+                if (copy) {
+                    filesToSort.clear();
+                    filesToSort.addAll(sortable);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
-        return mainComparator;
-    }
-
-    public static List<File> replaceFilesWithCachedVariants(@Nullable final File[] files) {
-        ArrayList<File> list = new ArrayList<>(Arrays.asList(files != null ? files : new File[0]));
-        return replaceFilesWithCachedVariants(list);
     }
 
     /**
-     * Optimization: convert {@link File}s to FileWithCachedData
-     * For example sorting invokes a lot of filesystem i/o calls which comes with performance penalty
+     * Check if a file can be created (parent exists and can be written)
      */
-    public static List<File> replaceFilesWithCachedVariants(@Nullable List<File> files) {
-        files = (files == null ? new ArrayList<>() : files);
-
-        for (int i = 0; i < files.size(); i++) {
-            if (files.get(i) instanceof GsFileWithMetadataCache) {
-                continue;
-            }
-            final File o = files.remove(i);
-            final int at = files.indexOf(o);
-            files.add(i, at >= 0 ? files.get(at) : new GsFileWithMetadataCache(o));
+    public static boolean isWritable(final File file) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return file != null && Files.isWritable(file.toPath());
+        } else {
+            return file != null && file.canWrite();
         }
-        return files;
+    }
+
+    /**
+     * Check if a file can be created.
+     * Checks if closest ancestor is writable.
+     */
+    public static boolean canCreate(File file) {
+        // A file is creatable if the first existing ancestor is writable
+        while (file != null && !file.exists()) {
+            file = file.getParentFile();
+        }
+        return isWritable(file);
+    }
+
+    /**
+     * Check if file is child of folder. A folder is not its own child.
+     *
+     * @param parent Parent folder
+     * @param test   File to test
+     * @return if parent is a child of test
+     */
+    public static boolean isChild(final File parent, File test) {
+        if (test == null || parent == null || parent.equals(test)) {
+            return false;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return test.toPath().toAbsolutePath().startsWith(parent.toPath().toAbsolutePath());
+        }
+
+        do {
+            test = test.getParentFile();
+            if (parent.equals(test)) {
+                return true;
+            }
+        } while (test != null);
+
+        return false;
+    }
+
+    public static File findNonConflictingDest(final File destDir, final String name) {
+        File dest = new File(destDir, name);
+        final String[] splits = name.split("\\.");
+        final String baseName = splits[0];
+        splits[0] = "";
+        final String extension = String.join(".", splits);
+        int i = 1;
+        while (dest.exists()) {
+            dest = new File(destDir, String.format("%s_%d%s", baseName, i, extension));
+            i++;
+        }
+        return dest;
+    }
+
+    public static boolean isUriOrFilePath(final String path) {
+        try {
+            // Attempt to create a URI from the given path
+            // If the URI scheme is "file", it's a file path
+            return "file".equals(Uri.parse(path).getScheme());
+        } catch (Exception e) {
+            // If parsing the path as a URI fails, it's not a valid URI
+            // So, assume it's a file path
+            return true;
+        }
+    }
+
+    public static void copyUriToFile(final Context context, final Uri source, final File dest) {
+
+        try (final OutputStream outputStream = new FileOutputStream(dest, false);
+             final InputStream inputStream = context.getContentResolver().openInputStream(source)
+        ) {
+            final byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+        } catch (IOException ignored) {
+        }
+    }
+
+    public static File makeAbsolute(final String path, final File base) {
+        if (path == null) {
+            return null;
+        }
+
+        final String decodedPath = GsTextUtils.decodeUrl(path).trim();
+        if (decodedPath.isEmpty()) {
+            return null;
+        }
+
+        return makeAbsolute(new File(decodedPath), base);
+    }
+
+    public static File makeAbsolute(final File file, final File base) {
+        if (file == null || base == null) {
+            return null;
+        }
+
+        if (file.isAbsolute()) {
+            return file;
+        }
+
+        final String full = base.getAbsolutePath() + File.separator + file.getPath();
+        final String[] parts = full.split(Pattern.quote(File.separator));
+
+        final Stack<String> stack = new Stack<>();
+        for (final String part : parts) {
+            if (part.equals("..") && !stack.isEmpty()) {
+                stack.pop();
+            } else if (!part.equals(".")) {
+                stack.add(part);
+            }
+        }
+
+        return new File(String.join(File.separator, stack));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static List<File> searchFiles(final File root, String glob) {
+        try {
+            glob = glob.trim();
+            glob = glob.startsWith("glob:") ? glob : "glob:" + glob;
+
+            final PathMatcher matcher = FileSystems.getDefault().getPathMatcher(glob);
+            final List<File> found = new ArrayList<>();
+            Files.walkFileTree(root.toPath(), new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(final Path path, final BasicFileAttributes attrs) {
+                    if (matcher.matches(path)) {
+                        found.add(path.toFile());
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+            return found;
+        } catch (IOException e) {
+            Log.d(GsFileUtils.class.getName(), e.toString());
+        }
+        return null;
+    }
+
+    public static String getPath(final File file) {
+        try {
+            return file.getCanonicalPath();
+        } catch (IOException e) {
+            return file.getAbsolutePath();
+        } catch (NullPointerException e) {
+            return "";
+        }
+    }
+
+    public static boolean isDirectory(final File file) {
+        return file != null && (GsFileBrowserListAdapter.isVirtualFolder(file) || file.isDirectory());
+    }
+
+    public static boolean exists(final File file) {
+        return file != null && (GsFileBrowserListAdapter.isVirtualFolder(file) || file.exists());
+    }
+
+    public static boolean isSymbolicLink(final File file) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return Files.isSymbolicLink(file.toPath());
+        } else {
+            try {
+                final File actualParent = file.getCanonicalFile().getParentFile();
+                final File parent = file.getParentFile();
+                return actualParent == null || !actualParent.equals(parent);
+            } catch (IOException | NullPointerException ignored) {
+                return false;
+            }
+        }
     }
 }

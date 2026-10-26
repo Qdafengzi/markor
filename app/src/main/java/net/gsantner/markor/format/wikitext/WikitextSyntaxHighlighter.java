@@ -1,9 +1,7 @@
 /*#######################################################
  *
- *   Maintained by Gregor Santner, 2018-
- *   https://gsantner.net/
- *
- *   License of this file: Apache 2.0 (Commercial upon request)
+ *   Maintained 2018-2025 by Gregor Santner <gsantner AT mailbox DOT org>
+ *   License of this file: Apache 2.0
  *     https://www.apache.org/licenses/LICENSE-2.0
  *
 #########################################################*/
@@ -43,11 +41,10 @@ public class WikitextSyntaxHighlighter extends SyntaxHighlighterBase {
     public final static Pattern CHECKLIST_LEFT_ARROW = Pattern.compile("(?<=(\\n|^))\t*(\\[)(<)(])(?= )");
     public final static Pattern SUBSCRIPT = Pattern.compile("(_\\{(?!~)(.+?)\\})");
     public final static Pattern SUPERSCRIPT = Pattern.compile("(\\^\\{(?!~)(.+?)\\})");
-    public final static Pattern ZIMHEADER_CONTENT_TYPE_ONLY = Pattern.compile("^\\s*Content-Type:\\s*text/x-zim-wiki");
     public final static Pattern ZIMHEADER = Pattern.compile(
             "^Content-Type: text/x-zim-wiki(\r\n|\r|\n)" +
                     "Wiki-Format: zim \\d+\\.\\d+(\r\n|\r|\n)" +
-                    "Creation-Date: \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[.+:\\d]+");
+                    "Creation-Date: \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[-.+:\\d]+");
 
     // groups for matching individual parts of the checklist regex
     public static final int CHECKBOX_LEFT_BRACKET_GROUP = 2;
@@ -98,7 +95,7 @@ public class WikitextSyntaxHighlighter extends SyntaxHighlighterBase {
         createUnderlineHexColorsSpans();
 
         if (_isWikitextBiggerHeadings) {
-            createSpanForMatches(HEADING, new WrWikitextHeaderSpanCreator(_spannable, Colors.COLOR_HEADING, _textSize));
+            createSpanForMatches(HEADING, new WrWikitextHeaderSpanCreator(_spannable, Colors.COLOR_HEADING));
         } else {
             createColorSpanForMatches(HEADING, Colors.COLOR_HEADING);
         }

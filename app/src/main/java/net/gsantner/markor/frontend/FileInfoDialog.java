@@ -1,9 +1,7 @@
 /*#######################################################
  *
- *   Maintained by Gregor Santner, 2017-
- *   https://gsantner.net/
- *
- *   License of this file: Apache 2.0 (Commercial upon request)
+ *   Maintained 2017-2025 by Gregor Santner <gsantner AT mailbox DOT org>
+ *   License of this file: Apache 2.0
  *     https://www.apache.org/licenses/LICENSE-2.0
  *
 #########################################################*/
@@ -27,7 +25,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
-import net.gsantner.markor.ApplicationObject;
 import net.gsantner.markor.R;
 import net.gsantner.markor.model.AppSettings;
 import net.gsantner.opoc.util.GsContextUtils;
@@ -40,6 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class FileInfoDialog extends DialogFragment {
     public static final String EXTRA_FILEPATH = "EXTRA_FILEPATH";
     public static final String FRAGMENT_TAG = "fileInfoDialog";
+    public static final String RESULT_FAVOURITE_CHANGED = "FileInfoDialog.RESULT_FAVOURITE_CHANGED";
 
     public static FileInfoDialog newInstance(File sourceFile) {
         FileInfoDialog dialog = new FileInfoDialog();
@@ -77,7 +75,7 @@ public class FileInfoDialog extends DialogFragment {
     private AlertDialog.Builder setUpDialog(final File file, LayoutInflater inflater) {
         View root;
         AlertDialog.Builder dialogBuilder;
-        dialogBuilder = new AlertDialog.Builder(inflater.getContext(), R.style.Theme_AppCompat_DayNight_Dialog);
+        dialogBuilder = new AlertDialog.Builder(inflater.getContext(), R.style.Theme_AppCompat_DayNight_Dialog_Rounded);
         root = inflater.inflate(R.layout.file_info_dialog, null);
 
         dialogBuilder.setView(root);
@@ -87,11 +85,20 @@ public class FileInfoDialog extends DialogFragment {
         tv(root, R.id.ui__fileinfodialog__last_modified).setText(DateUtils.formatDateTime(root.getContext(), file.lastModified(), (DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_NUMERIC_DATE)));
         tv(root, R.id.ui__fileinfodialog__last_modified_caption).setText(getString(R.string.last_modified_witharg, "").replace(":", "").trim());
         tv(root, R.id.ui__fileinfodialog__size_description).setText(GsFileUtils.getReadableFileSize(file.length(), false));
+        tv(root, R.id.ui__fileinfodialog__mimetype_description).setText(GsFileUtils.getMimeType(file));
+        tv(root, R.id.ui__fileinfodialog__sha_256).setText(GsFileUtils.sha256(file));
         tv(root, R.id.ui__fileinfodialog__location).setOnLongClickListener(v -> {
-            GsContextUtils.instance.setClipboard(v.getContext(), file.getAbsolutePath());
-            Toast.makeText(v.getContext(), R.string.clipboard, Toast.LENGTH_SHORT).show();
-            return true;
-        });
+                    GsContextUtils.instance.setClipboard(v.getContext(), file.getAbsolutePath());
+                    Toast.makeText(v.getContext(), R.string.clipboard, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+        );
+        tv(root, R.id.ui__fileinfodialog__sha_256).setOnLongClickListener(v -> {
+                    GsContextUtils.instance.setClipboard(v.getContext(), GsFileUtils.sha256(file));
+                    Toast.makeText(v.getContext(), R.string.clipboard, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+        );
 
 
         // Number of lines and character count only apply for files.
@@ -114,10 +121,18 @@ public class FileInfoDialog extends DialogFragment {
         });
 
         // Hide checkbox
-        final AppSettings appSettings = ApplicationObject.settings();
+        final AppSettings appSettings = AppSettings.get(getContext());
         CheckBox checkHideInRecents = root.findViewById(R.id.ui__fileinfodialog__recents);
         checkHideInRecents.setChecked(appSettings.listFileInRecents(file));
         checkHideInRecents.setOnCheckedChangeListener((buttonView, isChecked) -> appSettings.setListFileInRecents(file, isChecked));
+
+
+        CheckBox checkFavorite = root.findViewById(R.id.ui__fileinfodialog__favorite);
+        checkFavorite.setChecked(appSettings.getFavouriteFiles().contains(file));
+        checkFavorite.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            appSettings.setFavouriteFile(file, isChecked);
+            getParentFragmentManager().setFragmentResult(RESULT_FAVOURITE_CHANGED, new Bundle());
+        });
 
         return dialogBuilder;
     }

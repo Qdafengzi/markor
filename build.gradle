@@ -1,10 +1,7 @@
 /*#######################################################
  *
- *   Maintained by Gregor Santner, 2017-
- *   https://gsantner.net/
- *
- *   License of this file: Apache 2.0 (Commercial upon request)
- *     https://www.apache.org/licenses/LICENSE-2.0
+ * SPDX-FileCopyrightText: 2017-2025 Gregor Santner <gsantner AT mailbox DOT org>
+ * SPDX-License-Identifier: Unlicense OR CC0-1.0
  *
 #########################################################*/
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
@@ -13,19 +10,19 @@ import java.text.SimpleDateFormat
 
 buildscript {
     ext {
-        version_gradle_tools = "7.2.2"
+        version_gradle_tools = '8.13.0'
         version_plugin_kotlin = "1.3.72"
         enable_plugin_kotlin = false
 
-        version_compileSdk = 33
-        version_buildTools = "33.0.0"
-        version_minSdk = 17
+        version_compileSdk = 35
+        version_buildTools = "35.0.0"
+        version_minSdk = 21
     }
 
     repositories {
+        mavenCentral()
         maven { url 'https://maven.google.com' }
         maven { url "https://jitpack.io" }
-        mavenCentral()
         google()
     }
 
@@ -46,19 +43,20 @@ allprojects {
         mavenCentral()
         maven { url 'https://maven.google.com' }
         maven { url "https://jitpack.io" }
-        jcenter()
         google()
     }
 
-    tasks.matching { task -> task.name.matches('.*generate.*Resources') }.all {
+    tasks.matching { task -> task.name.matches('(.*generate.*Resources)|(.*map.*SourceSetPaths)|(.*process.*NavigationResources)') }.all {
         task -> task.dependsOn copyRepoFiles
     }
 
-    tasks.matching {it instanceof Test}.all { // Enable unit test output, html+xml output
+    tasks.matching { it instanceof Test }.all { // Enable unit test output, html+xml output
         testLogging.events "passed", "skipped", "failed", "standardOut", "standardError"
         testLogging.showStandardStreams = true
-        reports.junitXml.enabled = true
-        reports.html.enabled = true
+        reports{
+            junitXml { enabled true }
+            html { enabled true }
+        }
     }
 }
 
@@ -78,11 +76,11 @@ task copyRepoFiles(type: Copy) {
 // Returns used android languages as a buildConfig array: {'de', 'it', ..}"
 static String findUsedAndroidLocales() {
     Set<String> langs = new HashSet<>()
-    new File('.').eachFileRecurse(groovy.io.FileType.DIRECTORIES) {
-        final foldername = it.name
-        if (foldername.contains('values-') && !it.absolutePath.contains("build" + File.separator + "intermediates") && !foldername.matches(".*values-((.*[0-9])|(land)|(port)).*")) {
-            new File(it.toString()).eachFileRecurse(groovy.io.FileType.FILES) {
-                if (it.exists() && it.name.toLowerCase().endsWith(".xml") && it.getText('UTF-8').contains("<string")) {
+    new File('.').eachDirRecurse { dir ->
+        final foldername = dir.name
+        if (foldername.startsWith('values-') && !dir.absolutePath.contains("build" + File.separator + "intermediates") && !foldername.matches(".*values-((.*[0-9])|(land)|(port)).*")) {
+            dir.eachFile { file ->
+                if (file.name.toLowerCase().endsWith(".xml") && file.getText('UTF-8').contains("<string")) {
                     langs.add(foldername.replace("values-", ""))
                 }
             }
@@ -91,36 +89,24 @@ static String findUsedAndroidLocales() {
     return '{' + langs.sort().collect { "\"${it}\"" }.join(",") + '}'
 }
 
-ext.getGitHash = { ->
-    try {
-        def stdout = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'rev-parse', 'HEAD'
-            standardOutput = stdout
-        }
-        return stdout.toString().trim()
-    } catch (Exception ignored) {
-        return 'unknown'
-    }
-}
 
-ext.getGitLastCommitMessage = { ->
-    try {
-        def stdout = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'log', '--oneline', '-1', '--format="%s"'
-            standardOutput = stdout
-        }
-        return stdout.toString().replace("\"", "").replace("\\", "").trim()
-    } catch (Exception ignored) {
-        return 'unknown'
-    }
-}
+ext.getGitHash = providers.exec {
+    commandLine('git', 'rev-parse', 'HEAD')
+}.standardOutput.asText.get().trim()
+
+ext.getGitLastCommitMessage = providers.exec {
+    commandLine('git', 'log', '--oneline', '-1', '--format=%s')
+}.standardOutput.asText.get().trim().replaceAll("\"", "\\\\\"")
 
 @SuppressWarnings(["UnnecessaryQualifiedReference", "SpellCheckingInspection", "GroovyUnusedDeclaration"])
 // Returns the build date in a RFC3339 compatible format. TZ is always converted to UTC
 static String getBuildDate() {
     final SimpleDateFormat RFC3339_LIKE = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
     RFC3339_LIKE.setTimeZone(TimeZone.getTimeZone("UTC"))
-    return RFC3339_LIKE.format(new Date())
+    Date buildDate = new Date()
+
+    // https://reproducible-builds.org/docs/source-date-epoch/
+    try { buildDate = new Date(Long.parseLong(System.getenv('SOURCE_DATE_EPOCH')) * 1000) } catch(Exception ignore) {}
+
+    return RFC3339_LIKE.format(buildDate)
 }

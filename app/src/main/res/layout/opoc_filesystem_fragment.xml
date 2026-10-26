@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?><!--
 /*#######################################################
  *
- *   Maintained by Gregor Santner, 2017-
- *   https://gsantner.net/
+ *   Maintained 2017-2025 by Gregor Santner <gsantner AT mailbox DOT org>
  *
- *   License of this file: Apache 2.0 (Commercial upon request)
+ *   License of this file: Apache 2.0
  *     https://www.apache.org/licenses/LICENSE-2.0
  *     https://github.com/gsantner/opoc/#licensing
  *
@@ -40,8 +39,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:minHeight="100dp"
+            app:fastScrollEnabled="true"
+            app:fastScrollHorizontalThumbDrawable="@drawable/scrollbar_thumb"
+            app:fastScrollHorizontalTrackDrawable="@drawable/scrollbar_track"
+            app:fastScrollVerticalThumbDrawable="@drawable/scrollbar_thumb"
+            app:fastScrollVerticalTrackDrawable="@drawable/scrollbar_track"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 
 </FrameLayout>
